@@ -1,0 +1,11 @@
+{
+	"productName": "electron-project",
+	"appId": "com.electron-project.electron-project",
+	"copyright": "electron-project",
+	"directories": {
+		"output": "build"
+	},
+	"extraResources": ["dist"],
+
+	"nsis": false
+}

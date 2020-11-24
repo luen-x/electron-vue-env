@@ -1,0 +1,40 @@
+{
+	"name": "electron-project",
+	"version": "0.1.0",
+	"description": "test",
+	"author": "luen",
+	"private": true,
+	"main": "./electron/index.js",
+	"scripts": {
+		"start": "vue-cli-service serve",
+		"ele": "node ./electron/web-server.js develop",
+		"lint": "vue-cli-service lint",
+		"pack": "electron-builder --dir ",
+		"postinstall": "electron-builder install-app-deps",
+		"build": "vue-cli-service build && electron-builder",
+		"build-dev": "vue-cli-service build && electron-builder --dir",
+		"build-web": "vue-cli-service build",
+		"build-ele": "electron-builder"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"core-js": "^3.6.5",
+		"sass": "^1.29.0",
+		"sass-loader": "^10.1.0",
+		"vue": "^2.6.11",
+		"@vue/cli-plugin-babel": "~4.5.0",
+		"@vue/cli-plugin-eslint": "~4.5.0",
+		"@vue/cli-service": "~4.5.0",
+		"@vue/eslint-config-standard": "^5.1.2",
+		"babel-eslint": "^10.1.0",
+		"eslint": "^6.7.2",
+		"eslint-plugin-import": "^2.20.2",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^4.2.1",
+		"eslint-plugin-standard": "^4.0.0",
+		"eslint-plugin-vue": "^6.2.2",
+		"vue-template-compiler": "^2.6.11",
+		"electron": "^10.1.5",
+		"electron-builder": "^22.9.1"
+	}
+}
