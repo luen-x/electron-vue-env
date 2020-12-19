@@ -16,7 +16,10 @@
 		"build-web": "vue-cli-service build",
 		"build-ele": "electron-builder"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"element-ui": "^2.13.0",
+		"moment": "^2.26.0"
+	},
 	"devDependencies": {
 		"core-js": "^3.6.5",
 		"sass": "^1.29.0",

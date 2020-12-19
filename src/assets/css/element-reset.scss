@@ -1,0 +1,69 @@
+// elment css reset
+.el-dialog {
+	border-radius: 4px;
+	margin-top: 10vh !important;
+	margin-bottom: 10vh !important;
+	max-height: 80vh;
+
+}
+.el-dialog__header {
+	border-bottom: 1px solid #ddd;
+	padding: 16px 24px;
+}
+.el-dialog__title {
+	color: #000;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 24px;
+}
+.el-dialog__body {
+	overflow: auto;
+	max-height: calc(80vh - 188px);
+}
+.el-dialog__footer {
+	// padding: 10px 24px;
+	padding-top: 20px;
+	// border-top: 1px solid #ddd
+	.el-button {
+		padding: 8px 15px;
+	}
+}
+.el-form {
+	&.el-form--label-top {
+		.el-form-item__label {
+			line-height: 20px;
+		}
+	}
+}
+.el-dropdown-menu {
+	.el-dropdown-menu__item {
+		&.el-dropdown-menu__item-active {
+			color: #2796ff;
+			background-color: #c6edff;
+		}
+	}
+}
+.el-textarea .el-input__count  {
+	line-height: 20px;
+}
+.el-form-item__label {
+	line-height: 20px;
+	padding-top: 10px;
+}
+.el-input__inner{
+	border-radius: 2px;
+	font-weight:nomal;
+}
+.el-button{
+	border-radius: 2px;
+}
+._nav-item._active{
+	font-weight: bolder;
+}
+.el-tabs__nav .is-active{
+	font-weight: bolder;
+}
+.el-message-loading {
+	color: #1890ff;
+
+}

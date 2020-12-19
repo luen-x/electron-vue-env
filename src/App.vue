@@ -1,29 +1,26 @@
 <template>
 	<div id="app">
-		<img alt="Vue logo" src="./assets/logo.png">
-		<HelloWorld msg="Welcome to Your Vue.js App" />
-		123123 
+		<m-header />
+		<div>
+			<m-model-tree />
+			<m-graph />
+		</div>
 	</div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+import Header from "@/components/header/header";
+import ModelTree from "@/components/modelTree/modelTree";
+import Graph from "@/components/graph/graph";
 export default {
 	name: "app",
 	components: {
-		HelloWorld
+		"m-header": Header,
+		"m-model-tree": ModelTree,
+		"m-graph": Graph
 	}
 };
 </script>
 
 <style lang="scss">
-#app {
-	font-family: Avenir, Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
-}
 </style>
