@@ -2,10 +2,11 @@ class GraphNode {
 	constructor(op) {
 		this.id = op.id;
 		this.type = op.type;
-
+		this.stType = op.stType;
 		this.name = op.name;
 		this.displayName = op.displayName;
 		this.children = [];
+		this.icon = op.icon;
 	}
 }
 class RelationNode extends GraphNode {
