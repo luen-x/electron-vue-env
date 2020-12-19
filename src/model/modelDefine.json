@@ -1,0 +1,26 @@
+[
+	{
+		"id":1,
+		"typeName":"Model" ,
+		"parentModelDefineId":null,
+		"attrs":[],
+		"allowedNestModelDefineIds":[2,3],
+		"icon":"/img/icon.png"
+	},
+	{
+		"id":2,
+		"typeName":"Package",
+		"attrs":[],
+		"parentModelDefineId":null,
+		"allowedNestModelDefineIds":[2,3],
+		"icon":"/img/icon.png"
+	},
+	{
+		"id":3,
+		"typeName":"Block",
+		"attrs":[],
+		"parentModelDefineId":null,
+		"allowedNestModelDefineIds":[2,3],
+		"icon":"/img/icon.png"
+	}
+]
