@@ -127,7 +127,6 @@ module.exports = {
 			}
 		],
 		"no-tabs": 0,
-		quotes: 0,
 		"no-console": 0,
 		"no-debugger": 1,
 		"no-var": 1,

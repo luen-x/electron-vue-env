@@ -1,4 +1,7 @@
-const { getUid } = require("../util/common");
+import { getUid } from "../util/common";
+import modelDefineJson from "./modelDefine.json";
+import { StepManager, InsertPoolChange, RemovePoolChange, InsertTreeNodeChange, RemoveTreeNodeChange } from "./stepManager";
+import { cloneDeep } from "lodash";
 
 // 元元模型定义，根据元元模型定义可以创建元模型，相当于模型的模型,元元模型定义实际上是json配置（op），此处只是定义json格式
 class ModelDefine {
@@ -19,7 +22,7 @@ class ModelDefine {
 class Model {
 	constructor(op) {
 		this.id = op.id;
-		this.paarentId = op.parentId;
+		this.parentId = op.parentId; // 关系没有parentId
 		this.modelDefineId = op.modelDefineId;
 		this.name = op.name;
 		this.displayName = op.displayName;
@@ -30,6 +33,7 @@ class Model {
 		// 查询是否有diagramId对应的shape,如果有则打开，如果没有则创建画布shape，然后打开
 		this.children = [];
 		this.shapeIds = [];
+		this.childIds = op.childIds;
 	}
 	getOption(){
 		return {
@@ -40,17 +44,24 @@ class Model {
 			displayName: this.displayName,
 			childIds: this.children.map(i => i.id),
 			attrs: this.attrs,
-			sourceId: this.sourceId,
-			targetId: this.targetId,
+			
 			diagramId: this.diagramId,
 			shapeIds: this.shapeIds
 		};
 	}
 	updateChildren(modelPool){
-		this.children = op.childIds ? op.childIds.map(id => modelPool[id]) : [];
+		this.children = this.childIds ? this.childIds.map(id => modelPool[id]) : [];
 
 	}
 	
+}
+class Relation extends Model {
+	constructor(op){
+		super(op);
+		this.sourceId = op.sourceId;// 如果isRelation,则有sourceId和targetId
+		this.targetId = op.targetId;
+
+	}
 }
 // relationGroup是一种特殊的Model,是一个虚的模型，除了id，children之外其他属性均为空，专门用来容纳relation，relation的sourceId决定了该relation存储于那个模型的relationGroup下
 // 
@@ -59,6 +70,10 @@ class RelationGroup extends Model{
 		super(op);
 		this.displayName = "关系";
 		this.isRelationGroup = true;
+
+	}
+	updateChildren(relationPool){
+		this.children = op.childIds ? op.childIds.map(id => relationPool[id]) : [];
 
 	}
 }
@@ -93,17 +108,24 @@ class Shape {
 }
 // 工厂，负责对元模型，模型，图形的管理，包括初始化，创建，插入，更新，移动，删除
 // op是存储的3种option集合
-class Factory {
+export class Factory {
 	constructor(op){
 		this.modelDefinePool = op.modelDefinePool || {};
 		this.modelPool = {};
+		this.relationPool = {};
 		this.shapePool = {};
+		this.projectInfo = op.projectInfo;
+		this.stepManager = new StepManager();
 		Object.values(op.modelOptionPool || {}).forEach(option => {
 			this.modelPool[option.id] = new Model(option);
 
 		});
+		Object.values(op.relationOptionPool || {}).forEach(option => {
+			this.relationPool[option.id] = new Model(option);
+
+		});
 		Object.values(this.modelPool || {}).forEach(model => {
-			model.updateChildren(this.modelPool);
+			model.updateChildren(model.isRelationGroup ? this.relationPool : this.modelPool);
 
 		});
 		Object.values(op.shapeOptionPool || {}).forEach(option => {
@@ -125,28 +147,55 @@ class Factory {
 	removeModelDefine(){
 
 	}
-
-	createModel(op){
+	createRelation(op){
 		const { modelDefineId } = op;
 		const modelDefine = this.modelDefinePool[modelDefineId];
+		const model = new Relation(op);
+		this.relationPool[model.id] = model;
+		if (modelDefine.typeName === "Contain") return;
+
+		const sourceModel = this.modelPool[model.sourceId];
+		if (sourceModel.children[0] && sourceModel.children[0].isRelationGroup){
+			model.parentId = sourceModel.children[0].id;
+			sourceModel.children[0].children.push(model);
+		} else {
+			const relationGroup = new RelationGroup({ id: getUid(), parentId: sourceModel.id, modelDefineId: 5 });
+			this.modelPool[relationGroup.id] = relationGroup;
+			model.parentId = relationGroup.id;
+			sourceModel.children.unshift(relationGroup);
+			relationGroup.children.push(model);
+		}
+		return model;
+		
+	}
+	createModel(op){
+		this.stepManager.beginUpdate();
+		const { modelDefineId } = op;
+		const modelDefine = this.modelDefinePool[modelDefineId];
+		if (modelDefine.isRelation) return this.createRelation(op);
 
 		const model = new Model(op);
 		const parentModel = this.modelPool[model.parentId];
+		new InsertPoolChange({ pool: this.modelPool, item: model });
+
 		this.modelPool[model.id] = model;
-		if (modelDefine.isEdge){
-			if (parentModel.children[0] && parentModel.children[0].isRelationGroup){
-				parentModel.children[0].children.push(model);
-			} else {
-				const relationGroup = new RelationGroup({ id: getUid() });
-				relationGroup.children.push(model);
-				parentModel.children.unshift(relationGroup);
 
-			}
-
-		} else {
-			parentModel.children.push(model);
-
-		}
+		parentModel && parentModel.children.push(model);
+		const ContainModelDefine = this.modelDefinePool[4];
+		parentModel && this.createRelation({
+			id: getUid(),
+			parentId: null,
+			modelDefineId: ContainModelDefine.id,
+			name: "包含",
+			displayName: "包含",
+			attrs: cloneDeep( ContainModelDefine.attrs),
+			sourceId: parentModel.id,
+			targetId: model.id,
+			diagramId: null,
+			children: [],
+			shapeIds: []
+		});
+		return model;
 
 	}
 
@@ -157,8 +206,10 @@ class Factory {
 
 	}
 	removeModel(id){
-		const toRemoveModel = this.modelPool[id];
+		console.log("remove");
+		const toRemoveModel = this.modelPool[id] || this.relationPool[id];
 		if (!toRemoveModel) return;
+		const toRemoveModelDefine = this.modelDefinePool[toRemoveModel.modelDefineId];
 		
 		if (toRemoveModel.children){
 			toRemoveModel.children.forEach(child => {
@@ -168,7 +219,26 @@ class Factory {
 		toRemoveModel.shapeIds.forEach(shapeId => {
 			this.removeShape(shapeId);
 		});
+		if (!toRemoveModelDefine.isRelation){
+			Object.values(this.relationPool).forEach(model => {
+				if (model.sourceId === id || model.targetId === id){
+					this.removeModel();
+				}
+			});
+		}
+		if (toRemoveModel.parentId){
+			// console.log()
+			const parentModel = this.modelPool[toRemoveModel.parentId];
+			parentModel.children.splice(parentModel.children.indexOf(toRemoveModel), 1);
+			if (parentModel.isRelationGroup && parentModel.children.length === 0){
+				const sourceModel = this.modelPool[parentModel.parentId];
+				sourceModel.children.splice(sourceModel.children.indexOf(parentModel), 1);
+				delete this.modelPool[parentModel.id];
+				
+			}
+		}
 		delete this.modelPool[id];
+		delete this.relationPool[id];
 
 	}
 
@@ -184,6 +254,54 @@ class Factory {
 	}
 	removeShape(){
 
+	}
+	static getInitFactory(projectName){
+		return new Factory({
+			projectInfo: { projectName: projectName, projectId: getUid() },
+			modelDefinePool: (() => {
+				const result = {};
+				modelDefineJson.forEach(i => {
+					result[i.id] = i;
+				});
+				return result;
+			})(),
+			modelOptionPool: {},
+			relationOptionPool: {},
+			shapeOptionPool: {} });
+	}
+	getRootModel(){
+		let model = Object.values(this.modelPool)[0];
+		if (!model) return null;
+		while (model.parentId){
+			model = this.modelPool[model.parentId];
+
+		}
+		return model;
+	}
+	getFactoryOptions(){
+		const result = {
+			projectInfo: this.projectInfo,
+			modelDefinePool: this.modelDefinePool,
+			modelOptionPool: {},
+			relationOptionPool: {},
+			shapeOptionPool: {}
+
+		};
+		Object.values(this.modelPool).forEach(model => {
+			const op = model.getOption();
+			result.modelOptionPool[op.id] = op;
+		});
+		Object.values(this.relationPool).forEach(model => {
+			const op = model.getOption();
+			result.relationOptionPool[op.id] = op;
+		});
+		Object.values(this.shapePool).forEach(model => {
+			const op = model.getOption();
+			result.shapeOptionPool[op.id] = op;
+		});
+
+		return result;
+		
 	}
 
 }

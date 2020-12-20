@@ -5,7 +5,9 @@
 		"parentModelDefineId":null,
 		"attrs":[],
 		"allowedNestModelDefineIds":[2,3],
-		"icon":"/img/icon.png"
+		"icon":"/img/icon.png",
+		"isRelation" : false,
+		"isDiagram": false
 	},
 	{
 		"id":2,
@@ -13,14 +15,51 @@
 		"attrs":[],
 		"parentModelDefineId":null,
 		"allowedNestModelDefineIds":[2,3],
-		"icon":"/img/icon.png"
+		"icon":"/img/icon.png",
+		"isRelation" : false,
+		"isDiagram": false
 	},
 	{
 		"id":3,
 		"typeName":"Block",
 		"attrs":[],
 		"parentModelDefineId":null,
-		"allowedNestModelDefineIds":[2,3],
-		"icon":"/img/icon.png"
+		"allowedNestModelDefineIds":[2,3,6],
+		"icon":"/img/icon.png",
+		"isRelation" : false,
+		"isDiagram": false
+	},
+	{
+		"id":4,
+		"typeName":"Contain",
+		"attrs":[],
+		"parentModelDefineId":null,
+		"allowedNestModelDefineIds":[],
+		"icon":"/img/icon.png",
+		"isRelation" : true,
+		"isDiagram": false
+	},
+	
+	{
+		"id":5,
+		"typeName":"RelationGroup",
+		"attrs":[],
+		"parentModelDefineId":null,
+		"allowedNestModelDefineIds":[],
+		"icon":"/img/icon.png",
+		"isRelation" : false,
+		"isDiagram": false,
+		"isRelationGroup":true
+	},
+	{
+		"id":6,
+		"typeName":"Trace",
+		"attrs":[],
+		"parentModelDefineId":null,
+		"allowedNestModelDefineIds":[],
+		"icon":"/img/icon.png",
+		"isRelation" : true,
+		"isDiagram": false
 	}
+	
 ]

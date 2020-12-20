@@ -85,10 +85,10 @@ export const treeForEach = (
  * @param {*} value
  * @param {Array} tree [{label,value,children}]
  */
-export const findNodeByValue = (tree, value) => {
+export const findNodeByValue = (tree, value, valueKey = "value") => {
 	let result;
 	treeForEach(tree, node => {
-		if (node.value === value) {
+		if (node[valueKey] === value) {
 			result = node;
 			return false;
 		}
