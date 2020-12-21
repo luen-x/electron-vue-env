@@ -256,7 +256,11 @@ export class Factory {
 		}
 	}
 
-	updateModel() {}
+	updateModel({ key, value, model }) {
+		const targetAttr = model.attrs.find(attr => {
+			return attr.key === key;
+		});
+	}
 	moveModel() {}
 	removeModel(id) {
 		try {

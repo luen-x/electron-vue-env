@@ -32,9 +32,9 @@ export class StepManager {
 		this.updatingDeep--;
 		if (this.updatingDeep === 0) {
 			const step = new Step(this.curStepChanges);
+			this.steps.length = this.curStepIndex + 1;
 			this.steps.push(step);
 			this.curStepIndex++;
-			this.steps.length = this.curStepIndex + 1;
 		}
 	}
 	rollBack() {
