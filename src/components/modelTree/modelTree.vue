@@ -41,7 +41,7 @@ export default {
 				name: "Root",
 				displayName: "Root",
 				modelDefineId: 1,
-				attrs: cloneDeep(factory.modelDefinePool[1].attrs)
+				attrs: cloneDeep(factory.modelDefinePool.get(1).attrs)
 			});
 		} else {
 			factory = new Factory(factoryOption);
@@ -74,11 +74,9 @@ export default {
 				});
 		},
 		getMenuItems(data) {
-			const modelDefine = this.factory.modelDefinePool[
-				data.modelDefineId
-			];
+			const modelDefine = this.factory.modelDefinePool.get(data.modelDefineId);
 			const items = modelDefine.allowedNestModelDefineIds
-				.map((id) => this.factory.modelDefinePool[id])
+				.map((id) => this.factory.modelDefinePool.get(id))
 				.map((item) => ({
 					value: item.id,
 					label: item.typeName,
