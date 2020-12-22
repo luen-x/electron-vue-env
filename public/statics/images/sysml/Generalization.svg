@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="19px" viewBox="0 0 18 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Generalization</title>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-86.000000, -565.000000)" id="Generalization">
+            <g transform="translate(86.000000, 565.056981)">
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="2" width="16" height="16"></rect>
+                <line x1="2" y1="16" x2="13" y2="5" id="直线-8" stroke="#0283E2" stroke-width="1.2" stroke-linecap="square"></line>
+                <path d="M13.054621,3.82681337 L10.0167354,7.76776695 L16.0017436,7.76776695 L13.054621,3.82681337 Z" id="三角形" stroke="#0283E2" fill="#FFFFFF" transform="translate(13.000000, 5.633883) rotate(45.000000) translate(-13.000000, -5.633883) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

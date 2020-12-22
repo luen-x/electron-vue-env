@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Loop</title>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-1607.000000, -110.000000)" id="Loop">
+            <g transform="translate(1607.000000, 110.000000)">
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <g id="Block"></g>
+                <rect id="矩形" stroke="#515151" fill="#FFFFFF" x="1.5" y="2.5" width="13" height="12" rx="1"></rect>
+                <path d="M9,2.5 L3,2.5 C2.58578644,2.5 2.21078644,2.66789322 1.93933983,2.93933983 C1.66789322,3.21078644 1.5,3.58578644 1.5,4 C1.5,4.41421356 1.66789322,4.78921356 1.93933983,5.06066017 C2.21078644,5.33210678 2.58578644,5.5 3,5.5 L9,5.5 C9.41421356,5.5 9.78921356,5.33210678 10.0606602,5.06066017 C10.3321068,4.78921356 10.5,4.41421356 10.5,4 C10.5,3.58578644 10.3321068,3.21078644 10.0606602,2.93933983 C9.78921356,2.66789322 9.41421356,2.5 9,2.5 Z" id="矩形" stroke="#515151" fill="#F7F7F7"></path>
+                <polygon id="L" fill="#515151" fill-rule="nonzero" points="11.1640625 13 11.1640625 12.3242188 8.34375 12.3242188 8.34375 7.2734375 7.5859375 7.2734375 7.5859375 13"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

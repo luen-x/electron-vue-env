@@ -5,7 +5,8 @@ import {
 	InsertPoolChange,
 	RemovePoolChange,
 	InsertTreeNodeChange,
-	RemoveTreeNodeChange
+	RemoveTreeNodeChange,
+	UpdateAttrChange
 } from "./stepManager";
 import { cloneDeep } from "lodash";
 
@@ -40,7 +41,7 @@ class Model {
 		this.children = [];
 		this.shapeIds = [];
 		this.childIds = op.childIds;
-		
+		this.inEditName = false;
 	}
 	getOption() {
 		return {
@@ -53,7 +54,6 @@ class Model {
 			attrs: this.attrs,
 			sourceId: this.sourceId,
 			targetId: this.targetId,
-			isRelationGroup: this.isRelationGroup,
 
 			diagramId: this.diagramId,
 			shapeIds: this.shapeIds
@@ -64,17 +64,30 @@ class Model {
 			? this.childIds.map(id => modelPool[id])
 			: [];
 	}
-	addChild(model, index){
+	addChild(model, index) {
 		if (this.children.includes(model)) return;
 		if (index === undefined) index = this.children.length;
-		const change = new InsertTreeNodeChange({ parent: this, node: model, index });
+		const change = new InsertTreeNodeChange({
+			parent: this,
+			node: model,
+			index
+		});
 		change.redo();
 		this.stepManager.addChange(change);
 	}
-	removeChild(model){
+	removeChild(model) {
 		const index = this.children.indexOf(model);
 		if (index === -1) return;
-		const change = new RemoveTreeNodeChange({ parent: this, node: model, index });
+		const change = new RemoveTreeNodeChange({
+			parent: this,
+			node: model,
+			index
+		});
+		change.redo();
+		this.stepManager.addChange(change);
+	}
+	updateAttr(attrKey, value) {
+		const change = new UpdateAttrChange({ model: this, attrKey, value });
 		change.redo();
 		this.stepManager.addChange(change);
 	}
@@ -92,12 +105,6 @@ class RelationGroup extends Model {
 	constructor(op, stepManager) {
 		super(op, stepManager);
 		this.displayName = "关系";
-		this.isRelationGroup = true;
-	}
-	updateChildren(relationPool) {
-		this.children = op.childIds
-			? op.childIds.map(id => relationPool[id])
-			: [];
 	}
 }
 
@@ -107,44 +114,53 @@ class Shape {
 		this.id = op.id;
 		this.parentId = op.parentId;
 		this.modelId = op.modelId;
+		this.shapeType = op.shapeType;
 		this.box = op.box;
 		this.sourceId = op.sourceId;
 		this.targetId = op.targetId;
+		this.childIds = op.childIds;
 		this.children = [];
 	}
 	getOption() {
 		return {
-			id: op.id,
-			parentId: op.parentId,
-			modelId: op.modelId,
-			box: op.box,
-			isEdge: op.isEdge,
-			sourceId: op.sourceId,
-			targetId: op.targetId
+			id: this.id,
+			parentId: this.parentId,
+			modelId: this.modelId,
+			box: this.box,
+			isEdge: this.isEdge,
+			sourceId: this.sourceId,
+			targetId: this.targetId,
+			shapeType: this.shapeType,
+			childIds: this.children.map(child => child.id)
 		};
 	}
 	updateChildren(shapePool) {
-		this.children = op.childIds ? op.childIds.map(id => shapePool[id]) : [];
+		this.children = this.childIds
+			? this.childIds.map(id => shapePool[id])
+			: [];
 	}
 }
 
 class Pool {
-	constructor(stepManager){
+	constructor(stepManager) {
 		this.map = {};
 		this.stepManager = stepManager;
 	}
-	get(id){
+	get(id) {
 		return this.map[id];
 	}
-	add(model){
+	add(model) {
 		if (this.map[model.id]) return;
 		const change = new InsertPoolChange({ pool: this.map, item: model });
 		change.redo();
 		this.stepManager.addChange(change);
 	}
-	remove(id){
+	remove(id) {
 		if (this.map[id] === undefined) return;
-		const change = new RemovePoolChange({ pool: this.map, item: this.map[id] });
+		const change = new RemovePoolChange({
+			pool: this.map,
+			item: this.map[id]
+		});
 		change.redo();
 		this.stepManager.addChange(change);
 	}
@@ -153,7 +169,6 @@ class Pool {
 // op是存储的3种option集合
 export class Factory {
 	constructor(op) {
-		
 		this.projectInfo = op.projectInfo;
 		this.stepManager = new StepManager();
 		this.modelDefinePool = new Pool(this.stepManager);
@@ -169,11 +184,18 @@ export class Factory {
 			this.modelPool.map[option.id] = new Model(option, this.stepManager);
 		});
 		Object.values(op.relationOptionPool || {}).forEach(option => {
-			this.relationPool.map[option.id] = new Relation(option, this.stepManager);
+			this.relationPool.map[option.id] = new Relation(
+				option,
+				this.stepManager
+			);
 		});
 		Object.values(this.modelPool.map).forEach(model => {
+			const modelDefine = this.modelDefinePool.get(model.modelDefineId);
+			// if (model.isRelationGroup) debugger;
 			model.updateChildren(
-				model.isRelationGroup ? this.relationPool.map : this.modelPool.map
+				modelDefine.isRelationGroup
+					? this.relationPool.map
+					: this.modelPool.map
 			);
 		});
 		Object.values(this.relationPool.map).forEach(model => {
@@ -195,34 +217,38 @@ export class Factory {
 			this.stepManager.beginUpdate();
 			const { modelDefineId } = op;
 			const modelDefine = this.modelDefinePool.get(modelDefineId);
+			op.attrs = cloneDeep(modelDefine.attrs);
 			const model = new Relation(op, this.stepManager);
 			this.relationPool.add(model);
-			
+
 			if (modelDefine.typeName === "Contain") {
 				this.stepManager.endUpdate();
 				return;
 			}
 
 			const sourceModel = this.modelPool.get(model.sourceId);
-			if (
+			const firstChildModelDefine =
 				sourceModel.children[0] &&
-				sourceModel.children[0].isRelationGroup
-			) {
+				this.modelDefinePool.get(sourceModel.children[0].modelDefineId);
+			if (firstChildModelDefine.isRelationGroup) {
 				model.parentId = sourceModel.children[0].id;
 				sourceModel.children[0].addChild(model);
-				
 			} else {
-				const relationGroup = new RelationGroup({
-					id: getUid(),
-					parentId: sourceModel.id,
-					modelDefineId: 5
-				}, this.stepManager);
+				const relationGroupModelDefine = this.modelDefinePool.get(5);
+				const relationGroup = new RelationGroup(
+					{
+						id: getUid(),
+						parentId: sourceModel.id,
+						modelDefineId: 5,
+						attrs: cloneDeep(relationGroupModelDefine.attrs)
+					},
+					this.stepManager
+				);
 				this.modelPool.add(relationGroup);
-			
+
 				model.parentId = relationGroup.id;
 				sourceModel.addChild(relationGroup, 0);
 				relationGroup.addChild(model);
-				
 			}
 			this.stepManager.endUpdate();
 			return model;
@@ -233,7 +259,7 @@ export class Factory {
 	}
 	createModel(op) {
 		try {
-			console.log("crate");
+			console.log("create");
 			this.stepManager.beginUpdate();
 			const { modelDefineId } = op;
 			const modelDefine = this.modelDefinePool.get(modelDefineId);
@@ -241,6 +267,7 @@ export class Factory {
 				this.stepManager.endUpdate();
 				return this.createRelation(op);
 			}
+			op.attrs = cloneDeep(modelDefine.attrs);
 
 			const model = new Model(op, this.stepManager);
 			const parentModel = this.modelPool.get(model.parentId);
@@ -248,7 +275,6 @@ export class Factory {
 
 			if (parentModel) {
 				parentModel.addChild(model);
-				
 			}
 			const ContainModelDefine = this.modelDefinePool.get(4);
 			parentModel &&
@@ -273,25 +299,33 @@ export class Factory {
 		}
 	}
 
-	updateModel({ key, value, model }) {
-		const targetAttr = model.attrs.find(attr => {
-			return attr.key === key;
-		});
+	updateModelAttr({ attrKey, value, model }) {
+		try {
+			this.stepManager.beginUpdate();
+			model.updateAttr(attrKey, value);
+			this.stepManager.endUpdate();
+		} catch (error) {
+			this.stepManager.rollBack();
+			throw error;
+		}
 	}
 	moveModel() {}
 	removeModel(id) {
 		try {
 			this.stepManager.beginUpdate();
-			console.log("remove");
-			const toRemoveModel = this.modelPool.get(id) || this.relationPool.get(id);
+			console.log("remove", id);
+			const toRemoveModel =
+				this.modelPool.get(id) || this.relationPool.get(id);
 			if (!toRemoveModel) {
 				this.stepManager.endUpdate();
 				return;
 			}
-			const toRemoveModelDefine = this.modelDefinePool.get(toRemoveModel.modelDefineId);
+			const toRemoveModelDefine = this.modelDefinePool.get(
+				toRemoveModel.modelDefineId
+			);
 
 			if (toRemoveModel.children) {
-				toRemoveModel.children.forEach(child => {
+				[...toRemoveModel.children].forEach(child => {
 					this.removeModel(child.id);
 				});
 			}
@@ -308,25 +342,27 @@ export class Factory {
 			if (toRemoveModel.parentId) {
 				// console.log()
 				const parentModel = this.modelPool.get(toRemoveModel.parentId);
+				const modelDefine = this.modelDefinePool.get(
+					parentModel.modelDefineId
+				);
 				parentModel.removeChild(toRemoveModel);
-				
+
 				if (
-					parentModel.isRelationGroup &&
+					modelDefine.isRelationGroup &&
 					parentModel.children.length === 0
 				) {
-					const sourceModel = this.modelPool.get(parentModel.parentId);
+					const sourceModel = this.modelPool.get(
+						parentModel.parentId
+					);
 					sourceModel.removeChild(parentModel);
-				
+
 					this.modelPool.remove(parentModel.id);
-					
 				}
 			}
 			if (toRemoveModelDefine.isRelation) {
 				this.relationPool.remove(id);
-				
 			} else {
 				this.modelPool.remove(id);
-				
 			}
 			this.stepManager.endUpdate();
 		} catch (error) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="16px" viewBox="0 0 22 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>iconxllb2</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.254902 0 0 0 0 0.309804 0 0 0 0 0.345098 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="欢迎页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.45">
+        <g transform="translate(-1404.000000, -100.000000)" id="iconxllb2">
+            <g transform="translate(1404.000000, 100.000000)">
+                <g filter="url(#filter-1)" id="列表">
+                    <g>
+                        <rect id="矩形" fill="#414F58" fill-rule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                        <path d="M2,2.00267019 L13.9932126,2 L13.9932126,2.99985011 L2,3.0025203 L2,2.00267019 L2,2.00267019 Z M13.9948755,6.99728384 L13.9948755,7.99216131 L2.00199866,7.99216131 L2.00199866,6.99728384 L13.9948755,6.99728384 Z M2.00199866,11.9914658 L13.9932126,11.9924731 L13.9932126,12.9826178 L2.00199866,12.9816105 L2.00199866,11.9914658 L2.00199866,11.9914658 Z" id="形状" fill="#414F58" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+                <polygon id="路径" fill="#000000" fill-rule="nonzero" opacity="0.65" points="16 7 22 7 18.9999551 10"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

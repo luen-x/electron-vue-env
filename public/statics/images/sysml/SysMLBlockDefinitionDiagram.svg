@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>SysMLBlockDefinitionDiagram</title>
+    <defs>
+        <linearGradient x1="100%" y1="50.6408878%" x2="8.33129883%" y2="50.0626229%" id="linearGradient-1">
+            <stop stop-color="#FEF9DB" offset="0%"></stop>
+            <stop stop-color="#FEF4BD" offset="44.2039696%"></stop>
+            <stop stop-color="#FEEF9E" offset="60.7131546%"></stop>
+            <stop stop-color="#FCF0AC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="用例图图元SVG" transform="translate(-74.000000, -365.000000)">
+            <g id="SysMLBlockDefinitionDiagram" transform="translate(74.000000, 365.000000)">
+                <g id="blank-空白文档">
+                    <polygon id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" points="3.42226247e-14 0 16 0 16 16 -5.04870979e-29 16"></polygon>
+                    <polygon id="形状" fill="#97958C" fill-rule="nonzero" points="11.9863063 0 -5.04870979e-29 0 -5.04870979e-29 16 16 16 16 4.24264751"></polygon>
+                    <polygon id="路径" fill="#EAEDC5" points="15 15 0.916137695 15 0.916137695 1 11.9949341 1 12.0430979 4.22354597 15 4.25749199"></polygon>
+                </g>
+                <rect id="矩形" fill="#4B4B4B" x="5" y="2" width="5" height="4" rx="1"></rect>
+                <rect id="矩形" fill="url(#linearGradient-1)" x="6" y="3" width="3" height="2"></rect>
+                <path d="M7.5307301,5.53915437 C8.71347763,5.56242424 9.38004276,5.57405918 9.53042549,5.57405918 C9.54206043,4.90749405 9.5478779,4.57421149 9.5478779,4.57421149 C9.5478779,4.57421149 8.54803021,4.55675908 6.54833482,4.52185427 L6.4959776,7.52139735 L5.4961299,7.50394495 L5.47867749,8.50379264 L6.47852519,8.52124505 L6.42616797,11.5207881 C8.31645675,11.526961 9.33679251,11.5300474 9.48717524,11.5300474 L9.44316346,10.5732977 L7.44346807,10.5383928 L7.5307301,5.53915437 Z" id="路径" fill="#4B4B4B" fill-rule="nonzero" transform="translate(7.513278, 8.025951) rotate(89.000000) translate(-7.513278, -8.025951) "></path>
+                <rect id="矩形" fill="#4B4B4B" x="8" y="9" width="5" height="4" rx="1"></rect>
+                <rect id="矩形" fill="url(#linearGradient-1)" x="9" y="10" width="3" height="2"></rect>
+                <rect id="矩形" fill="#4B4B4B" x="2" y="9" width="5" height="4" rx="1"></rect>
+                <rect id="矩形" fill="url(#linearGradient-1)" x="3" y="10" width="3" height="2"></rect>
+                <path d="M11,1 C11.5555556,1 11.8888889,1 12,1 C12.1111111,1 12.1388889,1 12.0833333,1 C14.0833333,3.22222222 15.0833333,4.33333333 15.0833333,4.33333333 C15.0833333,4.33333333 15.1846547,4.27065796 15.5,4.5 L15.5,5 L11,5 L11,1 Z" id="路径" stroke="#97958C" fill="#FFFFFF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

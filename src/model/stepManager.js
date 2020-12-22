@@ -17,8 +17,8 @@ export class StepManager {
 		this.curStepIndex = -1; // 代表当前所在的步骤序号
 	}
 	beginUpdate() {
-		console.log("begin");
 		this.updatingDeep++;
+		console.log("beginUpdate", this.updatingDeep);
 		if (this.updatingDeep === 1) {
 			this.curStepChanges = [];
 		}
@@ -28,7 +28,7 @@ export class StepManager {
 		this.curStepChanges.push(change);
 	}
 	endUpdate() {
-		console.log("end");
+		console.log("endUpdate", this.updatingDeep);
 		this.updatingDeep--;
 		if (this.updatingDeep === 0) {
 			const step = new Step(this.curStepChanges);
@@ -44,6 +44,7 @@ export class StepManager {
 		}
 		this.curStepChanges = [];
 		this.updatingDeep = 0;
+		console.log("rollback success");
 	}
 	undo() {
 		if (this.curStepIndex === -1) return;
@@ -136,5 +137,31 @@ export class RemoveTreeNodeChange extends Change {
 	}
 	redo() {
 		this.parentNode.children.splice(this.index, 1);
+	}
+}
+
+export class UpdateAttrChange extends Change {
+	constructor(op) {
+		super(op);
+		const { model, attrKey, value } = op;
+		this.attr = model.attrs.find(att => att.key === attrKey);
+		if (!this.attr) throw new Error("attr not found: key= " + attrKey);
+		this.model = model;
+		this.attrKey = attrKey;
+		this.newValue = value;
+		this.oldValue = this.attr.value;
+	}
+	redo() {
+		this.attr.value = this.newValue;
+		if (this.attrKey === "name") {
+			this.model.name = this.newValue;
+		}
+	}
+	undo() {
+		// debugger;
+		this.attr.value = this.oldValue;
+		if (this.attrKey === "name") {
+			this.model.name = this.oldValue;
+		}
 	}
 }

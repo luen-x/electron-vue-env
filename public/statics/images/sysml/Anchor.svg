@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="16px" viewBox="0 0 17 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Anchor</title>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#FFF7F0" offset="0%"></stop>
+            <stop stop-color="#FED6B9" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-471.000000, -133.000000)" id="Anchor">
+            <g transform="translate(472.000000, 133.000000)">
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <path d="M13,3 C12.6444444,3 12.3111111,3 12,3 C11,3 11,2.33986754 11,2 L11,1 L8.5,1 C8,1 8,1.5 8,1.5 C8,3.36324786 8,4.6965812 8,5.5 C8,5.69230769 8,6 8.5,6 L12.5,6 C12.6735752,6 13,6 13,5.5 C13,5.08119658 13,4.24786325 13,3 Z M11.5,1 L11.5,2 C11.5,2.2209139 11.7142857,2.5 12,2.5 L13,2.5 L11.5,1 Z M12,0 C12.1697247,0 13.5,1.61538462 14,2.15384615 C14,4.06491519 14,5.32132544 14,5.92307692 C14,7 13.3534622,7 13,7 L8,7 C7.64653776,7 7,7 7,5.92307692 C7,4.96581197 7,3.35042735 7,1.07692308 C7,0.538461538 7,0 8,0 L12,0 Z" id="形状" fill="#97958C" fill-rule="nonzero"></path>
+                <line x1="8" y1="6" x2="0.221825407" y2="13.7781746" id="直线-6" stroke="#0283E2" stroke-width="1.2" stroke-linecap="square" stroke-dasharray="3,3"></line>
+                <path d="M13,3 C12.6444444,3 12.3111111,3 12,3 C11,3 11,2.33986754 11,2 L11,1 L8.5,1 C8,1 8,1.5 8,1.5 C8,3.36324786 8,4.6965812 8,5.5 C8,5.69230769 8,6 8.5,6 L12.5,6 C12.6735752,6 13,6 13,5.5 C13,5.08119658 13,4.24786325 13,3 Z" id="路径" fill="url(#linearGradient-1)" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

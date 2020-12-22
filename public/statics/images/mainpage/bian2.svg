@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="740px" height="93px" viewBox="0 0 740 93" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 2</title>
+    <defs>
+        <linearGradient x1="0.975616677%" y1="32.1180556%" x2="100%" y2="32.1180556%" id="linearGradient-1">
+            <stop stop-color="#D6ECFE" offset="0%"></stop>
+            <stop stop-color="#A3CEE5" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="弹窗" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-367.000000, -214.000000)" fill="url(#linearGradient-1)" id="编组-2">
+            <g transform="translate(367.000000, 214.000000)">
+                <rect id="矩形" x="0" y="0" width="740" height="93"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

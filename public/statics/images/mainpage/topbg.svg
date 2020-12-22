@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="35px" viewBox="0 0 10 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>topbg</title>
+    <defs>
+        <linearGradient x1="49.0555159%" y1="1.83699324%" x2="49.0555159%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#4B9ED8" offset="0%"></stop>
+            <stop stop-color="#4698D1" offset="21.0300797%"></stop>
+            <stop stop-color="#2976A9" offset="47.7032617%"></stop>
+            <stop stop-color="#1D6797" offset="100%"></stop>
+            <stop stop-color="#CAE4F3" offset="100%"></stop>
+            <stop stop-color="#ABD7EF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="菜单树" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-750.000000, -174.000000)" fill="url(#linearGradient-1)" id="topbg">
+            <rect x="750" y="174" width="10" height="35"></rect>
+        </g>
+    </g>
+</svg>

@@ -1,16 +1,30 @@
 <template>
 	<div class="v-model-tree">
-		<el-tree :data="treeData" node-key="id" default-expand-all @node-contextmenu="handleContextMenu">
-			<span slot-scope="{data}">
-				{{ data.displayName }}
-				<i class="el-icon-circle-close g-operation" @click="handleDelete(data)" />
-
-			</span>
-		</el-tree>
 		<el-button @click="handleSave">save</el-button>
 		<el-button @click="handleRedo">前进</el-button>
 		<el-button @click="handleUndo">后退</el-button>
 		<el-button @click="handleTestRollBack">测试异常回滚</el-button>
+		<div style="height:800px;overflow:auto">
+			<el-tree :data="treeData" node-key="id" default-expand-all @node-contextmenu="handleContextMenu">
+				<span slot-scope="{data}">
+					<span v-if="!data.inEditName">
+						{{ data.name }}
+						<i class="el-icon-circle-close g-operation" @click.stop="handleDelete(data)" />
+						<i class="el-icon-edit g-operation g-m-l-10" @click.stop="handleEdit(data)" />
+
+					</span>
+					<el-input
+						v-else
+						v-model="data.nameForEdit"
+						size="mini"
+						autofocus
+						@blur="handleSaveName(data)"
+						@click.stop
+					/>
+
+				</span>
+			</el-tree>
+		</div>
 	</div>
 </template>
 <script>
@@ -74,7 +88,9 @@ export default {
 				});
 		},
 		getMenuItems(data) {
-			const modelDefine = this.factory.modelDefinePool.get(data.modelDefineId);
+			const modelDefine = this.factory.modelDefinePool.get(
+				data.modelDefineId
+			);
 			const items = modelDefine.allowedNestModelDefineIds
 				.map((id) => this.factory.modelDefinePool.get(id))
 				.map((item) => ({
@@ -118,6 +134,21 @@ export default {
 		handleDelete(data) {
 			this.factory.removeModel(data.id);
 		},
+		handleEdit(data) {
+			this.$set(data, "nameForEdit", data.name);
+			// data.nameForEdit = data.name;
+			data.inEditName = true;
+		},
+		handleSaveName(data) {
+			if (data.nameForEdit !== data.name) {
+				this.factory.updateModelAttr({
+					model: data,
+					attrKey: "name",
+					value: data.nameForEdit
+				});
+			}
+			data.inEditName = false;
+		},
 		handleRedo() {
 			this.factory.stepManager.redo();
 		},
@@ -129,8 +160,8 @@ export default {
 				this.factory.stepManager.beginUpdate();
 				console.log(this.treeData[0].children.length);
 				[...this.treeData[0].children].forEach((model, index) => {
-					if (index === 2) throw new Error("2 error");
-					console.log(index);
+					if (index === 3) throw new Error("2 error");
+					// console.log(index);
 					this.factory.removeModel(model.id);
 				});
 				this.factory.stepManager.endUpdate();
@@ -145,5 +176,6 @@ export default {
 <style lang="scss">
 .v-model-tree {
 	width: 300px;
+	margin-right: 20px;
 }
 </style>

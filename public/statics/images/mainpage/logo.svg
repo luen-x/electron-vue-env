@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>logo</title>
+    <defs>
+        <linearGradient x1="62.857325%" y1="37.0700527%" x2="87.3020412%" y2="62.8217147%" id="linearGradient-1">
+            <stop stop-color="#C42526" offset="0%"></stop>
+            <stop stop-color="#C22526" offset="59.2826225%"></stop>
+            <stop stop-color="#E62021" offset="86.3987223%"></stop>
+            <stop stop-color="#E52021" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="57.6188538%" y1="12.1635183%" x2="72.1040379%" y2="87.5197642%" id="linearGradient-2">
+            <stop stop-color="#C42526" offset="0%"></stop>
+            <stop stop-color="#C22526" offset="59.2826225%"></stop>
+            <stop stop-color="#E62021" offset="86.3987223%"></stop>
+            <stop stop-color="#E52021" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="62.857325%" y1="14.0834797%" x2="87.3020412%" y2="85.6158742%" id="linearGradient-3">
+            <stop stop-color="#C42526" offset="0%"></stop>
+            <stop stop-color="#C22526" offset="59.2826225%"></stop>
+            <stop stop-color="#E62021" offset="86.3987223%"></stop>
+            <stop stop-color="#E52021" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="55.7110275%" y1="42.7849489%" x2="59.3039268%" y2="86.9847444%" id="linearGradient-4">
+            <stop stop-color="#BE2627" offset="0%"></stop>
+            <stop stop-color="#C62526" offset="40.6355574%"></stop>
+            <stop stop-color="#C22526" offset="76.5677787%"></stop>
+            <stop stop-color="#C22526" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="51.2322135%" y1="5.3843942%" x2="49.5351492%" y2="88.2248325%" id="linearGradient-5">
+            <stop stop-color="#D02324" offset="0%"></stop>
+            <stop stop-color="#D42324" offset="36.1818753%"></stop>
+            <stop stop-color="#E72021" offset="75.5445293%"></stop>
+            <stop stop-color="#E72021" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-6">
+            <stop stop-color="#6CC5FC" offset="0%"></stop>
+            <stop stop-color="#3297DE" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="logo" transform="translate(-5.000000, 1.000000)">
+            <rect id="矩形" stroke="#B22728" fill="url(#linearGradient-1)" x="9.81462786" y="1.63696809" width="1.07459818" height="1"></rect>
+            <rect id="矩形" stroke="#B22728" fill="url(#linearGradient-2)" x="7.74002968" y="2.84973404" width="1" height="1"></rect>
+            <rect id="矩形" stroke="#B22728" fill="url(#linearGradient-3)" x="11.4743064" y="3.65824468" width="1.48951782" height="1.42553191"></rect>
+            <path d="M23.7408958,0.865961531 L15.5833885,5.57500585 L15.5833885,8.67170664 L21.1454997,5.64423303 L21.1454997,17.4646001 L23.7408958,16.0959177 L23.7408958,0.865961531 Z" id="矩形" stroke="#B22728" fill="url(#linearGradient-4)"></path>
+            <polygon id="矩形" fill="url(#linearGradient-5)" points="24.0070983 15.9950289 22.3157133 16.912795 24.0070983 7.79733388"></polygon>
+            <path d="M8.9391588,4.30847196 L3.55163989,13.6399284 L4.96143498,15.8849722 L8.90838568,9.04865303 C9.07818632,9.34096321 9.2263096,9.59738961 9.34246003,9.80063781 C10.0108569,10.9702458 11.6590052,13.9460263 12.4433926,15.3645994 L13.6240443,13.319651 C13.1242924,12.3901193 11.5625271,9.38647061 8.9391588,4.30847196 Z" id="三角形" stroke="#23B3E9" fill="url(#linearGradient-6)" transform="translate(8.582834, 10.060007) rotate(-30.000000) translate(-8.582834, -10.060007) "></path>
+            <g transform="translate(3.703704, 2.619048)" fill="#6FC5FC" id="三角形">
+                <path d="M2.75543245,1.68932409 C3.86425489,3.76467551 4.56210958,5.03649595 4.84899655,5.50478542 C4.84899655,5.50478542 2.19034626,4.9050845 0.967420849,4.78625103 L2.75543245,1.68932409 Z" transform="translate(2.908209, 3.597055) rotate(-30.000000) translate(-2.908209, -3.597055) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

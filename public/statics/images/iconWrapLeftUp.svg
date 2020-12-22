@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="16px" viewBox="0 0 17 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>iconWrapLeftUp</title>
+    <g id="icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-267.000000, -922.000000)">
+            <rect fill="#FFFFFF" x="0" y="0" width="1440" height="1080"></rect>
+            <g id="箭头" transform="translate(342.000000, 926.500000) rotate(-180.000000) translate(-342.000000, -926.500000) translate(259.000000, 914.000000)" fill-rule="nonzero">
+                <g id="编组-23" transform="translate(153.000000, 12.500000) rotate(45.000000) translate(-153.000000, -12.500000) translate(145.000000, 3.000000)">
+                    <rect id="矩形" fill="#000000" opacity="0" x="1.8189894e-12" y="2" width="16" height="16"></rect>
+                    <polygon id="路径" fill="#FFFFFF" points="5.6881738 9.40179684 0.137580263 14.9523904 3.41870117 18.5610352 12.5629437 9.41679268 3.25811669 0.455506361 -2.94058894e-11 3.71362305"></polygon>
+                    <polygon id="路径" fill="#000000" points="6.99182129 9.49182129 1.34221765 15.1414249 3.44705061 17.2462579 11.2113282 9.4819803 3.48736053 1.75801262 1.37268658 3.87268658"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

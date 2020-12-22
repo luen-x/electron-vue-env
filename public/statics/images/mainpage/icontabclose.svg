@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icontabclose</title>
+    <defs>
+        <filter id="filter-1">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.254902 0 0 0 0 0.309804 0 0 0 0 0.345098 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+        <filter id="filter-2">
+            <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0.690196 0 0 0 0 0.690196 0 0 0 0 0.690196 0 0 0 1.000000 0"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="欢迎页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-147.000000, -105.000000)" id="编组">
+            <g transform="translate(34.000000, 103.000000)">
+                <g filter="url(#filter-1)" id="icontabclose">
+                    <g transform="translate(113.000000, 2.000000)">
+                        <g filter="url(#filter-2)" id="jx" opacity="0">
+                            <g>
+                                <rect id="矩形" fill="#000000" fill-rule="nonzero" x="0" y="0" width="16" height="16"></rect>
+                            </g>
+                        </g>
+                        <path d="M13.0106812,12.2441406 L8.97753906,7.9997092 L13.0106812,3.60131836 C13.1045354,3.50746279 13.0204426,3.16409259 12.9265884,3.07039168 C12.8327342,2.97653611 12.2378646,2.97653611 12.144165,3.07039168 L8,7.16418457 L3.80102539,3.07039168 C3.70717118,2.97653611 3.16409022,2.97941271 3.07039066,3.07326828 C2.97653645,3.16712385 2.97653645,3.65173959 3.07039066,3.74560547 L7.15087891,8 L2.98565674,12.2441406 C2.89180252,12.3379962 2.97957797,12.8359074 3.07343218,12.9296083 C3.1672864,13.0234639 3.61906899,13.0234639 3.71276855,12.9296083 L8,8.95166016 L12.3652954,12.9296083 C12.4591496,13.0234639 12.8357654,13.0204223 12.929465,12.9265668 C13.0234842,12.8328762 13.1045354,12.3380065 13.0106812,12.2441406 Z" id="路径" fill="#414F58" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

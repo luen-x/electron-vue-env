@@ -1,9 +1,9 @@
 <template>
 	<div id="app">
 		<m-header />
-		<div>
-			<m-model-tree />
-			<m-graph />
+		<div class="g-flex">
+			<m-model-tree class="g-flex-0" />
+			<m-Graph-editor class="g-flex-1" />
 		</div>
 		<m-portal />
 	</div>
@@ -12,7 +12,7 @@
 <script>
 import Header from "@/components/header/header";
 import ModelTree from "@/components/modelTree/modelTree";
-import Graph from "@/components/graph/graph";
+import GraphEditor from "@/components/graphEditor/content";
 import Portal from "./components/common/Portal.vue";
 
 export default {
@@ -20,7 +20,7 @@ export default {
 	components: {
 		"m-header": Header,
 		"m-model-tree": ModelTree,
-		"m-graph": Graph,
+		"m-Graph-editor": GraphEditor,
 		"m-portal": Portal
 	}
 };

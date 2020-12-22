@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="162px" height="60px" viewBox="0 0 162 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>tchoverbg</title>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#F7E19F" offset="0%"></stop>
+            <stop stop-color="#FBC550" offset="51.0399071%"></stop>
+            <stop stop-color="#FDD644" offset="53.6080025%"></stop>
+            <stop stop-color="#EBE3A3" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="弹窗" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.22672526">
+        <g transform="translate(-387.000000, -356.000000)" fill="url(#linearGradient-1)" id="tchoverbg">
+            <rect x="387" y="356" width="162" height="60" rx="1"></rect>
+        </g>
+    </g>
+</svg>

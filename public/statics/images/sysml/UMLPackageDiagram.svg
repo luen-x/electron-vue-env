@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>iconSPD</title>
+    <defs>
+        <linearGradient x1="0%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#DEDEDE" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50.4708666%" x2="8.33129883%" y2="50.0460097%" id="linearGradient-2">
+            <stop stop-color="#FEF9DB" offset="0%"></stop>
+            <stop stop-color="#FEF4BD" offset="44.2039696%"></stop>
+            <stop stop-color="#FEEF9E" offset="60.7131546%"></stop>
+            <stop stop-color="#FCF0AC" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50.4708564%" x2="8.33129883%" y2="50.0460087%" id="linearGradient-3">
+            <stop stop-color="#FEF9DB" offset="0%"></stop>
+            <stop stop-color="#FEF4BD" offset="44.2039696%"></stop>
+            <stop stop-color="#FEEF9E" offset="60.7131546%"></stop>
+            <stop stop-color="#FCF0AC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="用例图图元SVG" transform="translate(-203.000000, -410.000000)">
+            <g id="iconSPD" transform="translate(203.000000, 411.000000)">
+                <g id="iconBDD">
+                    <g id="blank-空白文档">
+                        <polygon id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" points="3.42226247e-14 0 16 0 16 16 -5.04870979e-29 16"></polygon>
+                        <polygon id="形状" fill="#97958C" fill-rule="nonzero" points="11.9863063 0 -5.04870979e-29 0 -5.04870979e-29 16 16 16 16 4.24264751"></polygon>
+                        <polygon id="路径" fill="url(#linearGradient-1)" points="15 15 0.916137695 15 0.916137695 1 11.9949341 1 12.0430979 4.22354597 15 4.25749199"></polygon>
+                        <polygon id="路径" stroke="#97958C" fill="#FFFFFF" fill-rule="nonzero" points="11.4475098 0.528076172 15.4375 4.31665039 11.4475098 4.31665039"></polygon>
+                    </g>
+                </g>
+                <g id="回收站文件夹" transform="translate(3.000000, 3.000000)" stroke="#545454">
+                    <g id="编组-3">
+                        <path d="M2.62349761,0.504640098 L0.5,0.768334092 L0.5,2.3698277 C0.509716251,2.46816722 0.576991811,2.7968924 0.751502177,3.28022651 C1.07050866,3.15777888 1.4291731,3.17128026 2.0029136,3.48979227 L6.42898285,3.17717131 L6.11511379,0.982862955 L2.62349761,0.504640098 Z" id="路径" fill="url(#linearGradient-2)"></path>
+                        <path d="M6.21147368,2.52057614 L0.544874243,2.77066512 L0.788526322,5.47942386 L6.45512576,5.22933488 L6.21147368,2.52057614 Z" id="路径" fill="url(#linearGradient-3)"></path>
+                    </g>
+                </g>
+                <g id="回收站文件夹" transform="translate(6.000000, 7.000000)" stroke="#545454">
+                    <g id="编组-3">
+                        <path d="M2.62349761,0.504640098 L0.5,0.768334092 L0.5,2.3698277 C0.509716251,2.46816722 0.576991811,2.7968924 0.751502177,3.28022651 C1.07050866,3.15777888 1.4291731,3.17128026 2.0029136,3.48979227 L6.42898285,3.17717131 L6.11511379,0.982862955 L2.62349761,0.504640098 Z" id="路径" fill="url(#linearGradient-2)"></path>
+                        <path d="M6.21147368,2.52057614 L0.544874243,2.77066512 L0.788526322,5.47942386 L6.45512576,5.22933488 L6.21147368,2.52057614 Z" id="路径" fill="url(#linearGradient-3)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

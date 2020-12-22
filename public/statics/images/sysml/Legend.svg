@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Legend</title>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-473.000000, -516.000000)" id="Legend">
+            <g transform="translate(473.000000, 516.000000)">
+                <rect id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" x="0" y="0" width="16" height="16"></rect>
+                <rect id="矩形" stroke="#97958C" fill="#97958C" x="0.5" y="1.5" width="14" height="12" rx="1"></rect>
+                <rect id="矩形" fill="#FFFFFF" x="1" y="2" width="13" height="11" rx="1"></rect>
+                <polygon id="矩形" fill="#FD001F" points="2 9.5 5 9.5 5 11.5 2 11.5"></polygon>
+                <polygon id="矩形" fill="#43A1F9" points="2 6.5 5 6.5 5 8.5 2 8.5"></polygon>
+                <polygon id="矩形" fill="#85CC10" points="2 3.5 5 3.5 5 5.5 2 5.5"></polygon>
+                <polygon id="矩形" fill="#979487" points="6 9.99743652 12 9.99743652 12 11.0327148 6 11.0327148"></polygon>
+                <polygon id="矩形" fill="#979487" points="6 7 12 7 12 8.03527832 6 8.03527832"></polygon>
+                <polygon id="矩形" fill="#979487" points="6 4 12 4 12 5.03527832 6 5.03527832"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

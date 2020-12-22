@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="17px" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>iconBDD</title>
+    <defs>
+        <linearGradient x1="100%" y1="50.9228785%" x2="8.33129883%" y2="50.090177%" id="linearGradient-1">
+            <stop stop-color="#FEF9DB" offset="0%"></stop>
+            <stop stop-color="#FEF4BD" offset="44.2039696%"></stop>
+            <stop stop-color="#FEEF9E" offset="60.7131546%"></stop>
+            <stop stop-color="#FCF0AC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="用例图图元SVG" transform="translate(-177.000000, -460.000000)">
+            <g id="iconBDD" transform="translate(177.000000, 461.000000)">
+                <g id="编组-51">
+                    <g id="blank-空白文档">
+                        <polygon id="矩形" fill="#000000" fill-rule="nonzero" opacity="0" points="3.42226247e-14 0 16 0 16 16 -5.04870979e-29 16"></polygon>
+                        <polygon id="形状" fill="#97958C" fill-rule="nonzero" points="11.9863063 0 -5.04870979e-29 0 -5.04870979e-29 16 16 16 16 4.24264751"></polygon>
+                        <polygon id="路径" fill="#FFFFFF" points="15 15 0.916137695 15 0.916137695 1 11.9949341 1 12.0430979 4.22354597 15 4.25749199"></polygon>
+                        <polygon id="路径" stroke="#97958C" fill="#FFFFFF" fill-rule="nonzero" points="11.4475098 0.528076172 15.4375 4.31665039 11.4475098 4.31665039"></polygon>
+                    </g>
+                    <rect id="矩形" stroke="#000000" fill="url(#linearGradient-1)" opacity="0.65" x="5.5" y="3.5" width="4" height="3" rx="1"></rect>
+                    <path d="M8.1898901,5.98145849 C8.65164421,5.9915133 8.93966412,5.99654071 9.05394983,5.99654071 C9.05394983,5.32987404 9.05394983,4.99654071 9.05394983,4.99654071 C9.05394983,4.99654071 8.40786964,4.98526302 7.11570926,4.96270765 L7.06149675,8.04726135 L6.03126335,8.02927856 L6.01408719,9.01329997 L7.04469192,9.03128924 L6.99356102,11.9605765 C8.25286785,11.9845526 8.93966412,11.9965407 9.05394983,11.9965407 L9.05394983,10.9965407 L8.10187325,11.0239406 L8.1898901,5.98145849 Z" id="路径" fill="#000000" fill-rule="nonzero" opacity="0.64827474" transform="translate(7.534019, 8.479624) rotate(89.000000) translate(-7.534019, -8.479624) "></path>
+                    <rect id="矩形" stroke="#000000" fill="url(#linearGradient-1)" opacity="0.65" x="2.5" y="10.5" width="4" height="3" rx="1"></rect>
+                    <rect id="矩形" stroke="#000000" fill="url(#linearGradient-1)" opacity="0.65" x="8.5" y="10.5" width="4" height="3" rx="1"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

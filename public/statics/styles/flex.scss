@@ -1,0 +1,58 @@
+.flex {
+  display: -webkit-box;
+	display: -moz-box;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+.justify-content {
+  -webkit-justify-content:center;
+	justify-content:center;
+	-moz-box-pack:center;
+	box-pack:center;
+	justify-content: center;
+}
+.align-center {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.space-between {
+  -webkit-justify-content:space-between;;
+	justify-content:space-between;;
+	-moz-box-pack:space-between;;
+	box-pack:space-between;;
+	justify-content: space-between;
+}
+.flex-warp {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+
+}
+a.h-a {
+	cursor: pointer;
+  width: 16px;
+  height: 16px;
+  @extend .flex;
+  @extend .justify-content;
+  @extend .align-center;
+}
+
+
+a.h-a:hover {
+  background:rgba(244,223,153,1);
+  border:1px solid rgba(194,181,151,1);
+}
+a.h-a:active {
+  background:rgba(234,194,102,1);
+  border:1px solid rgba(194,181,151,1);
+}
+a.a-active {
+  background:rgba(234,194,102,1);
+  border:1px solid rgba(194,181,151,1);
+}

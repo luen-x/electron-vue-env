@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ObjectFlow</title>
+    <defs>
+        <linearGradient x1="8.49609375%" y1="43.5498047%" x2="95.023019%" y2="43.5498047%" id="linearGradient-1">
+            <stop stop-color="#E6E6CA" offset="0%"></stop>
+            <stop stop-color="#FEFEEF" offset="59.75654%"></stop>
+            <stop stop-color="#FAFAE1" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="九大图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-806.000000, -417.000000)" id="ObjectFlow">
+            <g transform="translate(806.000000, 417.000000)">
+                <g id="编组-8" fill="#000000" fill-rule="nonzero" opacity="0">
+                    <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+                </g>
+                <path d="M15.0003476,2 L15.0003476,2.98059082 L9.60011499,2.98059082 C8.76274779,2.98059082 7.41982894,3.51691506 6.97898528,3.96704102 C6.35127421,4.60782892 6.01480663,6.21895432 6.00034759,6.50597063 L6.00034759,9.57617188 L8.04685638,7.03424072 C8.11097909,7.00873516 9.00034759,7.00873516 9.00034759,7.03424072 L6.00034759,11 C5.97111517,11.0376286 5.01660546,11.0376286 4.98753021,11 L2.00034759,7.03424072 C1.97913051,7.00653098 2.93606771,7.00873516 3.00034759,7.03424072 L4.98753021,9.57617188 C4.98009113,7.61564912 4.98009113,6.5922487 4.98753021,6.50597063 C4.98564424,6.42236906 5.37136006,3.41030952 6.00034759,2.98059082 C6.71567962,2.49188232 8.26328215,2 9.60011499,2 L15.0003476,2 Z" id="形状" fill="#0283E2" fill-rule="nonzero" transform="translate(8.500174, 6.514111) scale(-1, 1) translate(-8.500174, -6.514111) "></path>
+                <rect id="矩形" stroke="#97958C" fill="url(#linearGradient-1)" x="8" y="11" width="6" height="4" rx="1"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

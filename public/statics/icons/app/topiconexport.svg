@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>topicondc</title>
+    <defs>
+        <linearGradient x1="86.7138054%" y1="77.5201091%" x2="17.9662777%" y2="77.5201091%" id="linearGradient-1">
+            <stop stop-color="#8E99A3" offset="0%"></stop>
+            <stop stop-color="#B0BBC5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="86.7138054%" y1="77.5201091%" x2="17.9662777%" y2="77.5201091%" id="linearGradient-2">
+            <stop stop-color="#8E99A3" offset="0%"></stop>
+            <stop stop-color="#B0BBC5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="39.6170485%" x2="63.6916535%" y2="55.7008893%" id="linearGradient-3">
+            <stop stop-color="#E8E8E8" offset="0%"></stop>
+            <stop stop-color="#CBCBCB" offset="47.4201774%"></stop>
+            <stop stop-color="#BDBCBD" offset="99.9181799%"></stop>
+        </linearGradient>
+        <linearGradient x1="32.4475939%" y1="8.82161458%" x2="56.543667%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#F4ADAD" offset="0%"></stop>
+            <stop stop-color="#AA3B3B" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="45.6767809%" y1="0%" x2="61.2030498%" y2="109.288194%" id="linearGradient-5">
+            <stop stop-color="#BF7575" offset="0%"></stop>
+            <stop stop-color="#5A0D0D" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="效果图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="topicondc" fill-rule="nonzero">
+            <g id="数据库">
+                <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="14" height="14"></rect>
+                <path d="M1.23958333,8.40583333 L1.23958333,11.0089583 C1.26145833,12.3754167 3.51020833,13.4808333 7,13.4808333 C10.4897917,13.4808333 12.7370833,12.3754167 12.7604167,11.0089583 L12.7604167,8.40583333 L1.23958333,8.40583333 Z" id="路径" stroke="#69676A" stroke-width="0.8" fill="url(#linearGradient-1)"></path>
+                <path d="M12.7604167,8.395625 C12.7604167,9.84520833 10.5029167,11.020625 7,11.020625 C3.49708333,11.020625 1.23958333,9.84520833 1.23958333,8.395625 C1.23958333,6.94604167 3.49708333,5.770625 7,5.770625 C10.5029167,5.770625 12.7604167,6.94458333 12.7604167,8.395625 Z" id="路径" fill="#F4EA2A"></path>
+                <path d="M1.23958333,5.78083333 L1.23958333,8.09229167 C1.26145833,9.45875 3.51020833,10.71 7,10.71 C10.4897917,10.71 12.7370833,9.45875 12.7604167,8.09229167 L12.7604167,5.78083333 L1.23958333,5.78083333 Z" id="路径" stroke="#69676A" stroke-width="0.8" fill="url(#linearGradient-2)"></path>
+                <path d="M12.7604167,5.770625 C12.7604167,7.22020833 10.5029167,8.395625 7,8.395625 C3.49708333,8.395625 1.23958333,7.22020833 1.23958333,5.770625 C1.23958333,4.32104167 3.49708333,3.145625 7,3.145625 C10.5029167,3.145625 12.7604167,4.31958333 12.7604167,5.770625 Z" id="路径" fill="#F4EA2A"></path>
+                <path d="M1.23958333,3.15583333 L1.23958333,5.46729167 C1.26145833,6.83375 3.51020833,8.085 7,8.085 C10.4897917,8.085 12.7370833,6.83375 12.7604167,5.46729167 L12.7604167,3.15583333 L1.23958333,3.15583333 Z" id="路径" stroke="#69676A" stroke-width="0.8" fill="url(#linearGradient-2)"></path>
+                <path d="M12.7604167,3.145625 C12.7604167,4.59520833 10.5029167,5.770625 7,5.770625 C3.49708333,5.770625 1.23958333,4.59520833 1.23958333,3.145625 C1.23958333,1.69604167 3.49708333,0.520625 7,0.520625 C10.5029167,0.520625 12.7604167,1.69458333 12.7604167,3.145625 Z" id="路径" stroke="#69676A" stroke-width="0.8" fill="url(#linearGradient-3)"></path>
+            </g>
+            <g id="上传" transform="translate(6.000000, 5.000000)" fill="url(#linearGradient-4)" stroke="url(#linearGradient-5)">
+                <path d="M2.93307691,-0.348405437 L-0.75744273,3.4974823 L1.5032427,3.4974823 L1.52811452,8.5 L5.50843282,8.5 L5.50059024,3.38226029 L7.96133541,2.73132512 L4.12362565,-0.285812053 C3.98273174,-0.40645809 3.85147433,-0.591254492 2.93307691,-0.348405437 Z" id="形状" transform="translate(3.500310, 4.000000) rotate(360.000000) translate(-3.500310, -4.000000) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

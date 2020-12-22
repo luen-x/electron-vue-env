@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>laoding</title>
+  </head>
+  <body>
+    <div class="_content">
+      <img src="loadingbg.png" class="_load-img" />
+      <div class="g-flex-center g-pd-t-18">
+        <div style="width:270px;height:12px;overflow:hidden" class="g-relative">
+          <div class="_move-bar"></div>
+        </div>
+      </div>
+
+      <div class="g-tc g-pd-tb-6 g-bold">
+        <span class="g-m-l-10" style="color:#050505;font-size:12px">
+          ©2020 杭州华望系统科技有限公司 版权所有
+        </span>
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.send('launch-ready');
+      };
+    </script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+      @keyframes save-loading {
+        from {
+          transform: translateX(-50%);
+        }
+        to {
+          transform: translateX(0%);
+        }
+      }
+      ._content {
+        background: white;
+        height: 100vh;
+      }
+      ._load-img {
+        width: 100%;
+        display: block;
+      }
+      ._move-bar {
+        position: absolute;
+        background-image: repeating-linear-gradient(
+            to right,
+            rgba(54, 229, 241, 0.5) 0%,
+            rgba(255, 255, 255, 0) 20%,
+            rgba(255, 255, 255, 0) 30%,
+            rgba(54, 229, 241, 0.5) 50%,
+            rgba(255, 255, 255, 0) 70%,
+            rgba(255, 255, 255, 0) 80%,
+            rgba(54, 229, 241, 0.5) 100%
+          ),
+          linear-gradient(
+            to bottom,
+            rgb(177, 236, 243) 0%,
+            rgb(177, 236, 243) 20%,
+            rgb(11, 108, 156) 50%,
+            rgb(16, 154, 211) 80%,
+            rgb(16, 154, 211) 100%
+          );
+        width: 200%;
+        height: 100%;
+        animation: 1s linear 0s infinite normal save-loading;
+      }
+      .g-flex-center {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+      .g-pd-t-30 {
+        padding-top: 30px;
+      }
+      .g-relative {
+        position: relative;
+      }
+      .g-tc {
+        text-align: center;
+      }
+      .g-pd-tb-20 {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .g-pd-tb-6 {
+        padding-top: 6px;
+        padding-bottom: 6px;
+      }
+      .g-pd-t-18 {
+        padding-top: 18px;
+      }
+      .g-bold {
+        font-weight: 600px;
+      }
+    </style>
+  </body>
+</html>
