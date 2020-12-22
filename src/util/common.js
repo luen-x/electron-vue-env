@@ -1,6 +1,7 @@
 import { StorageManager } from "./storage";
 import { version, storeKey as storeKey_ } from "@/constants/constants";
 import moment from "moment";
+import Vue from "vue";
 export const storage = new StorageManager({ version, prefix: "m-require" });
 export const storeKey = storeKey_;
 /**
@@ -348,6 +349,30 @@ const htmlRegx = /<\/?.+?>/g;
 export const cleanHtml = str => {
 	return str.replace(htmlRegx, "");
 };
+export const getStyleObj = str => {
+	const result = {};
+	if (!str) return result;
+	str.split(";")
+		.filter(Boolean)
+		.forEach(entry => {
+			const values = entry.split("=");
+			result[values[0]] = values[1] === undefined ? true : values[1];
+		});
+	return result;
+};
+export const getStyleStr = obj => {
+	let str = "";
+	Object.keys(obj).forEach(key => {
+		if (obj[key] === undefined) return;
+		str += key;
+		if (obj[key] === true) {
+			str += ";";
+		} else {
+			str += "=" + obj[key] + ";";
+		}
+	});
+	return str;
+};
 
 export const strToDom = str => {
 	let obj = document.createElement("div");
@@ -375,3 +400,38 @@ export const getTextWidth = text => {
 	dom.innerText = text;
 	return dom.clientWidth * 1.15;
 };
+export const uniqueArr = arr => {
+	const newArr = [];
+	const map = {};
+	arr.forEach(i => {
+		if (!map[i]) {
+			map[i] = true;
+			newArr.push(i);
+		}
+	});
+	return newArr;
+};
+export class VueMap {
+	
+	constructor(){
+	  this.map = {};
+	}
+	get(key){
+	  return this.map[key];
+	}
+	set(key, value){
+	  Vue.set(this.map, key, value);
+	}
+	delete(key){
+	  Vue.delete(this.map, key);
+	}
+	has(key){
+	  return Object.prototype.hasOwnProperty.call( this.map, key);
+	}
+	forEach(fn){
+	  Object.entries(this.map).forEach(([key, value]) => {
+			fn(value, key);
+	  });
+	}
+  
+}

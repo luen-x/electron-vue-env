@@ -1,5 +1,13 @@
 {
-    "include": [
-      "./src/**/*"
-    ]
+  "compilerOptions": {
+     "target": "es2017",
+     "allowSyntheticDefaultImports": false,
+      "baseUrl": "./",
+      "paths": {
+          "@/*": ["src/*"],
+          "@common/*": ["src/components/common/*"],
+          
+     }
+  },
+  "exclude": ["node_modules", "dist"]
 }

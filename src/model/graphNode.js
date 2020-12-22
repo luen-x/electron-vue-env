@@ -26,8 +26,9 @@ class ModelDefine {
 // 元模型，元模型可以创建模型实例，op是保存的json数据,也就是model.getOption返回的数据
 // children属性表达了模型之间的包含关系（除了relationGroup），这里是为了树渲染能够更快才放到的children里，除了relationGroup之外，所有children关系都应对应一条类型为contain的Relation
 class Model {
-	constructor(op, stepManager) {
-		this.stepManager = stepManager;
+	constructor(op, factory) {
+		this.factory = factory;
+		this.stepManager = factory.stepManager;
 		this.id = op.id;
 		this.parentId = op.parentId; // 关系没有parentId
 		this.modelDefineId = op.modelDefineId;
@@ -93,8 +94,8 @@ class Model {
 	}
 }
 class Relation extends Model {
-	constructor(op, stepManager) {
-		super(op, stepManager);
+	constructor(op, factory) {
+		super(op, factory);
 		this.sourceId = op.sourceId; // 如果isRelation,则有sourceId和targetId
 		this.targetId = op.targetId;
 	}
@@ -102,15 +103,17 @@ class Relation extends Model {
 // relationGroup是一种特殊的Model,是一个虚的模型，除了id，children之外其他属性均为空，专门用来容纳relation，relation的sourceId决定了该relation存储于那个模型的relationGroup下
 //
 class RelationGroup extends Model {
-	constructor(op, stepManager) {
-		super(op, stepManager);
+	constructor(op, factory) {
+		super(op, factory);
 		this.displayName = "关系";
 	}
 }
 
 // 元图形，根据元图形可以创建图形实例，需要根据模型的typeName以及parentModelDefineId去box配置中找到对应的box配置，准备好op后才可以new Shape
 class Shape {
-	constructor(op) {
+	constructor(op, factory) {
+		this.factory = factory;
+		this.stepManager = factory.stepManager;
 		this.id = op.id;
 		this.parentId = op.parentId;
 		this.modelId = op.modelId;
@@ -120,6 +123,10 @@ class Shape {
 		this.targetId = op.targetId;
 		this.childIds = op.childIds;
 		this.children = [];
+		this.offset = op.offset;
+		this.waypoints = op.waypoints;
+		this.sourcePoint = op.sourcePoint;
+		this.targetPoint = op.targetPoint;
 	}
 	getOption() {
 		return {
@@ -139,12 +146,19 @@ class Shape {
 			? this.childIds.map(id => shapePool[id])
 			: [];
 	}
+	isEdge(){
+		return this.box.position === "edge";
+	}
+	getModel(){
+		return this.factory.modelPool.get(this.modelId);
+	}
 }
 
 class Pool {
-	constructor(stepManager) {
+	constructor(factory) {
 		this.map = {};
-		this.stepManager = stepManager;
+		this.stepManager = factory.stepManager;
+		this.factory = factory;
 	}
 	get(id) {
 		return this.map[id];
@@ -171,22 +185,22 @@ export class Factory {
 	constructor(op) {
 		this.projectInfo = op.projectInfo;
 		this.stepManager = new StepManager();
-		this.modelDefinePool = new Pool(this.stepManager);
+		this.modelDefinePool = new Pool(this);
 		this.modelDefinePool.map = op.modelDefinePool || {};
-		this.modelPool = new Pool(this.stepManager);
-		this.relationPool = new Pool(this.stepManager);
-		this.shapePool = new Pool(this.stepManager);
+		this.modelPool = new Pool(this);
+		this.relationPool = new Pool(this);
+		this.shapePool = new Pool(this);
 
 		// this.modelPool = {};
 		// this.relationPool = {};
 		// this.shapePool = {};
 		Object.values(op.modelOptionPool || {}).forEach(option => {
-			this.modelPool.map[option.id] = new Model(option, this.stepManager);
+			this.modelPool.map[option.id] = new Model(option, this);
 		});
 		Object.values(op.relationOptionPool || {}).forEach(option => {
 			this.relationPool.map[option.id] = new Relation(
 				option,
-				this.stepManager
+				this
 			);
 		});
 		Object.values(this.modelPool.map).forEach(model => {
@@ -202,7 +216,7 @@ export class Factory {
 			model.updateChildren(this.modelPool.map);
 		});
 		Object.values(op.shapeOptionPool || {}).forEach(option => {
-			this.shapePool.map[option.id] = new Shape(option, this.stepManager);
+			this.shapePool.map[option.id] = new Shape(option, this);
 		});
 		Object.values(this.shapePool.map || {}).forEach(shape => {
 			shape.updateChildren(this.shapePool.map);
@@ -218,7 +232,7 @@ export class Factory {
 			const { modelDefineId } = op;
 			const modelDefine = this.modelDefinePool.get(modelDefineId);
 			op.attrs = cloneDeep(modelDefine.attrs);
-			const model = new Relation(op, this.stepManager);
+			const model = new Relation(op, this);
 			this.relationPool.add(model);
 
 			if (modelDefine.typeName === "Contain") {
@@ -242,7 +256,7 @@ export class Factory {
 						modelDefineId: 5,
 						attrs: cloneDeep(relationGroupModelDefine.attrs)
 					},
-					this.stepManager
+					this
 				);
 				this.modelPool.add(relationGroup);
 
@@ -269,7 +283,7 @@ export class Factory {
 			}
 			op.attrs = cloneDeep(modelDefine.attrs);
 
-			const model = new Model(op, this.stepManager);
+			const model = new Model(op, this);
 			const parentModel = this.modelPool.get(model.parentId);
 			this.modelPool.add(model);
 

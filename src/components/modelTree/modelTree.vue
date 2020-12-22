@@ -62,6 +62,7 @@ export default {
 		}
 		this.factory = factory;
 		this.treeData = [factory.getRootModel()];
+		app.projects.set(this.factory.projectInfo.id, this.factory);
 	},
 	beforeDestroy() {
 		// this.handleSave();
@@ -106,12 +107,8 @@ export default {
 					id: getUid(),
 					modelDefineId: menuItem.value,
 					parentId: parentNode.id,
-					name:
-						menuItem.modelDefine.typeName +
-						(parentNode.children.length + 1),
-					displayName:
-						menuItem.modelDefine.typeName +
-						(parentNode.children.length + 1),
+					name: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
+					displayName: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
 					attrs: cloneDeep(menuItem.modelDefine.attrs)
 				});
 			} else {

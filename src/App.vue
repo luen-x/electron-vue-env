@@ -14,6 +14,7 @@ import Header from "@/components/header/header";
 import ModelTree from "@/components/modelTree/modelTree";
 import GraphEditor from "@/components/graphEditor/content";
 import Portal from "./components/common/Portal.vue";
+import { VueMap } from "@/util/common";
 
 export default {
 	name: "app",
@@ -22,6 +23,15 @@ export default {
 		"m-model-tree": ModelTree,
 		"m-Graph-editor": GraphEditor,
 		"m-portal": Portal
+	},
+	data(){
+		return {
+			activeProjectId: "",
+			projects: new VueMap()
+		};
+	},
+	created(){
+		window.app = this;
 	}
 };
 </script>
