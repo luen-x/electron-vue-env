@@ -17,6 +17,7 @@ import {
 } from "./classes/index";
 import PropertyBar from "./comps/propertyBar.vue";
 import Outline from "./comps/outline/outline";
+import graphUtil from "./graphUtil";
 
 export default {
 	name: "comp-",
@@ -24,15 +25,14 @@ export default {
 		"m-property-bar": PropertyBar,
 		"m-outline": Outline
 	},
+	props: {
+		diagram: Object
+
+	},
 	data() {
 		return {
 			graph: undefined,
-			model: undefined,
-			connectionData: {
-				sourceCell: undefined,
-				targetCell: undefined,
-				edg: undefined
-			},
+	
 			propertyBarData: {
 				x: 0,
 				y: 0,
@@ -41,6 +41,19 @@ export default {
 			}
 		};
 	},
+	computed: {
+		factory(){
+			return this.diagram.factory;
+		},
+		shapePool(){
+			return this.factory.shapePool;
+		},
+		modelPool(){
+			return this.factory.modelPool;
+		}
+
+	},
+	
 	mounted() {
 		this.initGraph();
 		this.addListener();
@@ -49,54 +62,23 @@ export default {
 		initGraph() {
 			const model = new GraphModel();
 			const graph = new Graph(this.$refs.con, model);
-			this.model = model;
+			graph.diagram = this.diagram;
 			this.graph = graph;
 			let parent = graph.getDefaultParent();
-			graph.getModel().beginUpdate();
-			try {
-				let v1 = graph.insertVertex(
-					parent,
-					null,
-					"Hello,",
-					20,
-					200,
-					80,
-					30
-				);
-				let v2 = graph.insertVertex(
-					parent,
-					null,
-					"World",
-					200,
-					150,
-					80,
-					30
-				);
-				let v3 = graph.insertVertex(
-					parent,
-					null,
-					"everyBody!",
-					300,
-					350,
-					60,
-					60
-				);
-				const edg = graph.insertEdge(
-					parent,
-					null,
-					"",
-					v1,
-					v2,
-					graph.curEdgeStyle
-				);
-				// edg.moveable = false;
-				// graph.setCellsMovable(false);
-				graph.insertEdge(parent, null, "", v2, v3, graph.curEdgeStyle);
-				graph.insertEdge(parent, null, "", v1, v3, graph.curEdgeStyle);
-			} finally {
-				// Updates the display
-				graph.getModel().endUpdate();
-			}
+			this.initCells();
+		
+		},
+		initCells(){
+			let diagram = this.diagram;
+			// freshUtil.updateDiagramName(this.graph);
+			// if (!diagram.bounds || diagram.bounds.height === 0) {
+			// 	boundsApi.setDiagramBounds(diagram, { x: 12, y: 12, height: 800, width: 1400 });
+
+			// }
+			const diagramShapeId = diagram.diagramShapeId;
+			const diagramShape = this.shapePool.get(diagramShapeId);
+
+			graphUtil.addCellByShape(this.graph, diagramShape, { sortEdge: true }, 0);
 		},
 		addListener() {
 			const instance = this;

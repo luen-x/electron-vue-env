@@ -1,5 +1,6 @@
 import { getUid } from "../util/common";
 import modelDefineJson from "./modelDefine.json";
+import shapeDefineJson from "./shapeDefine.json";
 import {
 	StepManager,
 	InsertPoolChange,
@@ -38,12 +39,13 @@ class Model {
 		this.attrs = op.attrs;
 		this.sourceId = op.sourceId; // 如果isRelation,则有sourceId和targetId
 		this.targetId = op.targetId;
-		this.diagramId = op.diagramId; // 如果是isDiagram,则会有diagramId,diagramId就是shape.id,他是model和shape之间的桥梁，双击画布元素时会去shapePool中
-		// 查询是否有diagramId对应的shape,如果有则打开，如果没有则创建画布shape，然后打开
+		this.diagramShapeId = op.diagramShapeId; // 如果是isDiagram,则会有diagramShapeId,diagramShapeId就是shape.id,他是model和shape之间的桥梁，双击画布元素时会去shapePool中
+		// 查询是否有diagramShapeId对应的shape,如果有则打开，如果没有则创建画布shape，然后打开
 		this.children = [];
 		this.shapeIds = [];
 		this.childIds = op.childIds;
 		this.inEditName = false;
+		this.shapeDefineId = op.shapeDefineId;
 	}
 	getOption() {
 		return {
@@ -57,8 +59,9 @@ class Model {
 			sourceId: this.sourceId,
 			targetId: this.targetId,
 
-			diagramId: this.diagramId,
-			shapeIds: this.shapeIds
+			diagramShapeId: this.diagramShapeId,
+			shapeIds: this.shapeIds,
+			shapeDefineId: this.shapeDefineId
 		};
 	}
 	updateChildren(modelPool) {
@@ -96,6 +99,9 @@ class Model {
 		change.redo();
 		this.stepManager.addChange(change);
 	}
+	getModelDefine(){
+		return this.factory.modelDefinePool.get(this.modelDefineId);
+	}
 }
 class Relation extends Model {
 	constructor(op, factory) {
@@ -121,7 +127,6 @@ class Shape {
 		this.id = op.id;
 		this.parentId = op.parentId;
 		this.modelId = op.modelId;
-		this.shapeType = op.shapeType;
 		this.box = op.box;
 		this.sourceId = op.sourceId;
 		this.targetId = op.targetId;
@@ -142,7 +147,6 @@ class Shape {
 			isEdge: this.isEdge,
 			sourceId: this.sourceId,
 			targetId: this.targetId,
-			shapeType: this.shapeType,
 			childIds: this.children.map(child => child.id),
 			offset: this.offset,
 			waypoints: this.waypoints,
@@ -250,6 +254,8 @@ export class Factory {
 		this.modelPool = new Pool(this);
 		this.relationPool = new Pool(this);
 		this.shapePool = new Pool(this);
+		this.shapeDefinePool = new Pool(this);
+		this.shapeDefinePool.map = op.shapeDefinePool || {};
 
 		// this.modelPool = {};
 		// this.relationPool = {};
@@ -362,7 +368,7 @@ export class Factory {
 					attrs: cloneDeep(ContainModelDefine.attrs),
 					sourceId: parentModel.id,
 					targetId: model.id,
-					diagramId: null,
+					diagramShapeId: null,
 					children: [],
 					shapeIds: []
 				});
@@ -449,6 +455,10 @@ export class Factory {
 	createShape(op) {
 		try {
 			this.stepManager.beginUpdate();
+			if (!op.parentId){
+				const shape = new Shape(op);
+				this.shapePool.add(shape);
+			}
 
 			this.stepManager.endUpdate();
 			
@@ -463,15 +473,18 @@ export class Factory {
 	moveShape() {}
 	removeShape() {}
 	static getInitFactory(projectName) {
+		function parseToPool(arr){
+			const result = {};
+			arr.forEach(i => {
+				result[i.id] = i;
+			});
+			return result;
+
+		}
 		return new Factory({
 			projectInfo: { projectName: projectName, projectId: getUid() },
-			modelDefinePool: (() => {
-				const result = {};
-				modelDefineJson.forEach(i => {
-					result[i.id] = i;
-				});
-				return result;
-			})(),
+			modelDefinePool: parseToPool(modelDefineJson),
+			shapeDefinePool: parseToPool(shapeDefineJson),
 			modelOptionPool: {},
 			relationOptionPool: {},
 			shapeOptionPool: {}

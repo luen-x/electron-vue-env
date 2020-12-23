@@ -6,7 +6,7 @@
 		<el-button @click="handleTestRollBack">测试异常回滚</el-button>
 		<div style="height:800px;overflow:auto">
 			<el-tree :data="treeData" node-key="id" default-expand-all @node-contextmenu="handleContextMenu">
-				<span slot-scope="{data}">
+				<span slot-scope="{data}" @dblclick="handleOpenDiagram(data)">
 					<span v-if="!data.inEditName">
 						{{ data.name }}
 						<i class="el-icon-circle-close g-operation" @click.stop="handleDelete(data)" />
@@ -33,6 +33,7 @@ import modelDefine from "@/model/modelDefine.json";
 import { Factory } from "../../model/graphNode";
 import { cloneDeep } from "lodash";
 import { ContextMenu } from "@/components/common/ContextMenu/index";
+import graphUtil from "../graphEditor/graph/graphUtil";
 
 export default {
 	name: "comp-",
@@ -103,7 +104,7 @@ export default {
 		},
 		addNode(parentNode, menuItem) {
 			if (!menuItem.modelDefine.isRelation) {
-				this.factory.createModel({
+				const model = this.factory.createModel({
 					id: getUid(),
 					modelDefineId: menuItem.value,
 					parentId: parentNode.id,
@@ -111,6 +112,26 @@ export default {
 					displayName: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
 					attrs: cloneDeep(menuItem.modelDefine.attrs)
 				});
+				if (menuItem.modelDefine.isDiagram){
+					const box = cloneDeep( this.factory.shapeDefinePool.get(model.shapeDefineId));
+					this.factory.createShape({
+						id: getUid(),
+						parentId: undefined,
+						modelId: model.id,
+						box,
+						sourceId: undefined,
+						targetId: undefined,
+						childIds: [],
+						children: [],
+						offset: undefined,
+						waypoints: [],
+						sourcePoint: undefined,
+						targetPoint: undefined,
+						bounds: graphUtil.getBoundsByBox(box)
+					});
+					createShape;
+					this.handleOpenDiagram(model);
+				}
 			} else {
 				this.factory.createRelation({
 					id: getUid(),
@@ -166,6 +187,13 @@ export default {
 				this.factory.stepManager.rollBack();
 				throw error;
 			}
+		},
+		handleOpenDiagram(data){
+			const modelDefine = data.getModelDefine();
+			if (!modelDefine.isDiagram) return;
+			if (!app.diagrams.includes(data)) app.diagrams.push(data);
+			app.activeDiagramId = data.id;
+
 		}
 	}
 };

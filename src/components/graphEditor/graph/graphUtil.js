@@ -1,5 +1,6 @@
-import { shapeApi } from "@/api/shape/shapeApi";
-import {
+import { shapeApi } from "@/api/shapeApi";
+import mxGraph from "./classes/init";
+const {
 	Graph,
 	GraphModel,
 	mxEvent,
@@ -10,7 +11,7 @@ import {
 	mxCell,
 	mxImage,
 	mxConstants
-} from "./classes/index";
+} = mxGraph;
 
 const graphUtil = {
 	/**
@@ -32,10 +33,10 @@ const graphUtil = {
 				shape.bounds.y,
 				shape.bounds.width,
 				shape.bounds.height
-			  );
+			);
 
 		// if (umlShape.bounds && umlShape.bounds.offset){
-		//   geo.offset = umlShape.bounds.offset;
+		// geo.offset = umlShape.bounds.offset;
 		// }
 		const isParentEdge = shapePool.get(shape.parentId).isEdge();
 		if (isParentEdge) {
@@ -225,11 +226,11 @@ const graphUtil = {
 		}
 		
 	},
-	  /**
-   * 根据cellId删除cell，cellId就是umlShape的Id
-   * @param {*} graph
-   * @param {*} ids
-   */
+	/**
+ * 根据cellId删除cell，cellId就是umlShape的Id
+ * @param {*} graph
+ * @param {*} ids
+ */
 	deleteCellByIds(graph, ids) {
 		const model = graph.getModel();
 		ids.forEach(id => {
@@ -248,15 +249,15 @@ const graphUtil = {
 		return `${modelDefine.shortTypeName || "shortName"}&nbsp;&nbsp;&nbsp;&nbsp;[ ${modelDefine.typeName} ]&nbsp;${parentShapeModel.name} [${shapeModel.name}]`;
 
 	// 	if (diagram.getModelElements().toArray().length > 0){
-	// 	  const diagramTypeName = modelApi.getDiagramTypeName(diagram);
-	// 	  const elementType = this.getModelElementType(diagram);
-	// 	  const modelName = this.getModelElementName(diagram);
-	// 	  const diagramName = diagram.getName() || "";
-	// 	  return `${diagramTypeName}&nbsp;&nbsp;&nbsp;&nbsp;[ ${elementType} ]&nbsp;${modelName} [${diagramName}]`;
+	// 	const diagramTypeName = modelApi.getDiagramTypeName(diagram);
+	// 	const elementType = this.getModelElementType(diagram);
+	// 	const modelName = this.getModelElementName(diagram);
+	// 	const diagramName = diagram.getName() || "";
+	// 	return `${diagramTypeName}&nbsp;&nbsp;&nbsp;&nbsp;[ ${elementType} ]&nbsp;${modelName} [${diagramName}]`;
 	// 	} else {
-	// 	  return "";
+	// 	return "";
 	// 	}
-	//   }
+	// }
 	},
 	getTextWidth(text, styleStr){
 		const style = getStyleObj(styleStr);
@@ -267,11 +268,28 @@ const graphUtil = {
 		text = text.replace(/\n/g, "<br>");
 		const fontSize = style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
 		let size = mxUtils.getSizeForString(text || "1", fontSize,
-		  style[mxConstants.STYLE_FONTFAMILY]);
+			style[mxConstants.STYLE_FONTFAMILY]);
 		// const width = size.width + dx;
 		const width = size.width + dx + 4;
 		return width;
-	  }
+	},
+	isEmpty(val){
+		return val === undefined || val === null;
+
+	},
+	getBoundsByBox(box){
+		return {
+			x: (this.isEmpty(box.boxX) ? box.initX || 0 : box.boxX) + box.paddingLeft,
+			y: (this.isEmpty(box.boxY) ? box.initY || 0 : box.boxY) + box.paddingTop,
+			width: box.boxWidth - box.paddingLeft - box.paddingRight,
+			height: box.boxHeight - box.paddingTop - box.paddingBottom
+		};
+		// shape.bounds.x = shape.localStyle.boxInfo.boxX + shape.localStyle.boxInfo.paddingLeft;
+		// shape.bounds.y = shape.localStyle.boxInfo.boxY + shape.localStyle.boxInfo.paddingTop;
+		// shape.bounds.width = shape.localStyle.boxInfo.boxWidth - shape.localStyle.boxInfo.paddingLeft - shape.localStyle.boxInfo.paddingRight;
+		// shape.bounds.height = shape.localStyle.boxInfo.boxHeight - shape.localStyle.boxInfo.paddingTop - shape.localStyle.boxInfo.paddingBottom;
+	
+	}
 };
 
 export default graphUtil;

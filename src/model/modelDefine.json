@@ -27,7 +27,7 @@
 		"attrs": [{ "value": "Block", "key": "name" }],
 
 		"parentModelDefineId": null,
-		"allowedNestModelDefineIds": [2, 3, 6],
+		"allowedNestModelDefineIds": [2, 3, 6, 7],
 		"icon": "/img/icon.png",
 		"isRelation": false,
 		"isDiagram": false
@@ -63,5 +63,16 @@
 		"icon": "/img/icon.png",
 		"isRelation": true,
 		"isDiagram": false
+	},
+	{
+		"id": 7,
+		"typeName": "BlockDefinationDiagram",
+		"attrs": [{ "value": "BlockDefinationDiagram", "key": "name" }],
+		"parentModelDefineId": null,
+		"allowedNestModelDefineIds": [],
+		"icon": "/img/icon.png",
+		"isRelation": false,
+		"isDiagram": true,
+		"shapeDefineId":3
 	}
 ]

@@ -1,7 +1,7 @@
 <template>
 	<div class="v-graph-editor-content">
-		<m-sider-bar class="g-flex-0" />
-		<m-graph class="g-flex-1" />
+		<m-sider-bar class="g-flex-0" :diagram="diagram" />
+		<m-graph class="g-flex-1" :diagram="diagram" />
 	</div>
 </template>
 <script>
@@ -15,7 +15,9 @@ export default {
 		"m-sider-bar": SiderBar,
 		"m-graph": Graph
 	},
-	props: {},
+	props: {
+		diagram: Object
+	},
 	data() {
 		return {};
 	},

@@ -1,24 +1,42 @@
-{
-	"Block":{
-		"id":1,
-		"box":{
-
-		},
-		"bindGetTextMethod":"",
-		"shapeType":"Block",
+[
+	{
+		"id": 3,
+		"box": {},
+		"bindGetTextMethod": "getDiagramName",
+		"shapeType": "BlockDefinationDiagram"
+	},
+	{
+		"id": 1,
+		"box": {},
+		"bindGetTextMethod": "",
+		"shapeType": "Block",
 		"children": [
 			{
-				"id":2,
-				"box":{},
-				"bindGetTextMethod":"getKeyword",
-				"shapeType":"keywordLabel"
+				"id": 1.1,
+				"box": {},
+				"bindGetTextMethod": "getKeyword",
+				"shapeType": "keywordLabel"
 			},
 			{
-				"id":3,
-				"box":{},
-				"bindGetTextMethod":"getKeyword",
-				"shapeType":"nameLabel"
+				"id": 1.2,
+				"box": {},
+				"bindGetTextMethod": "getName",
+				"shapeType": "nameLabel"
+			}
+		]
+	},
+	{
+		"id": 2,
+		"box": {},
+		"bindGetTextMethod": "",
+		"shapeType": "Block",
+		"children": [
+			{
+				"id": 2.1,
+				"box": {},
+				"bindGetTextMethod": "getName",
+				"shapeType": "nameLabel"
 			}
 		]
 	}
-}
+]
