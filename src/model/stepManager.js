@@ -165,3 +165,36 @@ export class UpdateAttrChange extends Change {
 		}
 	}
 }
+
+export class BoundsChange extends Change {
+	constructor(op){
+		super(op);
+		const { shape, bounds } = op;
+		const box = this.shape.box;
+
+		this.shape = shape;
+		this.oldBounds = { ...this.shape.bounds };
+		this.newBounds = { ...bounds };
+		this.oldBoxBounds = {
+			boxX: this.shape.boxX,
+			boxY: this.shape.boxY,
+			boxWidth: this.shape.boxWidth,
+			boxHeight: this.shape.boxHeight
+		};
+		this.newBoxBounds = {
+			boxX: bounds.x - box.paddingLeft,
+			boxY: bounds.y - box.paddingTop,
+			boxWidth: bounds.width + box.paddingLeft + box.paddingRight,
+			boxHeight: bounds.height + box.paddingTop + box.paddingBottom
+		};
+	}
+	redo(){
+		Object.assign(this.shape.bounds, this.newBounds);
+		Object.assign(this.shape.box, this.newBoxBounds);
+	
+	}
+	undo(){
+		Object.assign(this.shape.bounds, this.oldBounds);
+		Object.assign(this.shape.box, this.this.oldBoxBounds);
+	}
+}

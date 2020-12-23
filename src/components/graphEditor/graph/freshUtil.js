@@ -132,13 +132,13 @@ export default {
   }, */
 	updateDiagramName(graph) {
 		const diagram = graph.diagram;
-		diagram.text = graphUtil.getDiagramTitle(diagram);
+		diagram.name = graphUtil.getDiagramTitle(diagram);
 
 		const width = graphUtil.getTextWidth(
-			diagram.text,
-			diagram.localStyle.styles
+			diagram.name,
+			diagram.box.style
 		);
-		const style = getStyleObj(diagram.localStyle.styles);
+		const style = getStyleObj(diagram.box.style);
 		style.width = width + 10;
 		const styleStr = getStyleStr(style);
 		shapeApi.updateShapes({ oldShape: diagram, styles: styleStr });

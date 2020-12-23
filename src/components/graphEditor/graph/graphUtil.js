@@ -1,4 +1,16 @@
 import { shapeApi } from "@/api/shape/shapeApi";
+import {
+	Graph,
+	GraphModel,
+	mxEvent,
+	ConnectionHandler,
+	mxGeometry,
+	mxUtils,
+	mxPoint,
+	mxCell,
+	mxImage,
+	mxConstants
+} from "./classes/index";
 
 const graphUtil = {
 	/**
@@ -233,7 +245,7 @@ const graphUtil = {
 		const shapeModel = shape.getModel();
 		const parentShapeModel = shape.factory.modelPool.get(shapeModel.parentId);
 		const modelDefine = shape.factory.modelDefinePool.get(model.modelDefineId);
-		return `${modelDefine.shortTypeName}&nbsp;&nbsp;&nbsp;&nbsp;[ ${modelDefine.typeName} ]&nbsp;${parentShapeModel.name} [${shapeModel.name}]`;
+		return `${modelDefine.shortTypeName || "shortName"}&nbsp;&nbsp;&nbsp;&nbsp;[ ${modelDefine.typeName} ]&nbsp;${parentShapeModel.name} [${shapeModel.name}]`;
 
 	// 	if (diagram.getModelElements().toArray().length > 0){
 	// 	  const diagramTypeName = modelApi.getDiagramTypeName(diagram);

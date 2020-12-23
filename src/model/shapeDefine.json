@@ -1,0 +1,24 @@
+{
+	"Block":{
+		"id":1,
+		"box":{
+
+		},
+		"bindGetTextMethod":"",
+		"shapeType":"Block",
+		"children": [
+			{
+				"id":2,
+				"box":{},
+				"bindGetTextMethod":"getKeyword",
+				"shapeType":"keywordLabel"
+			},
+			{
+				"id":3,
+				"box":{},
+				"bindGetTextMethod":"getKeyword",
+				"shapeType":"nameLabel"
+			}
+		]
+	}
+}

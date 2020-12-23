@@ -6,7 +6,8 @@ import {
 	RemovePoolChange,
 	InsertTreeNodeChange,
 	RemoveTreeNodeChange,
-	UpdateAttrChange
+	UpdateAttrChange,
+	BoundsChange
 } from "./stepManager";
 import { cloneDeep } from "lodash";
 
@@ -88,6 +89,9 @@ class Model {
 		this.stepManager.addChange(change);
 	}
 	updateAttr(attrKey, value) {
+
+		// model[attrKey] = value;
+
 		const change = new UpdateAttrChange({ model: this, attrKey, value });
 		change.redo();
 		this.stepManager.addChange(change);
@@ -127,6 +131,7 @@ class Shape {
 		this.waypoints = op.waypoints;
 		this.sourcePoint = op.sourcePoint;
 		this.targetPoint = op.targetPoint;
+		this.bounds = op.bounds || {};
 	}
 	getOption() {
 		return {
@@ -138,12 +143,16 @@ class Shape {
 			sourceId: this.sourceId,
 			targetId: this.targetId,
 			shapeType: this.shapeType,
-			childIds: this.children.map(child => child.id)
+			childIds: this.children.map(child => child.id),
+			offset: this.offset,
+			waypoints: this.waypoints,
+			sourcePoint: this.sourcePoint,
+			targetPoint: this.targetPoint
 		};
 	}
-	updateChildren(shapePool) {
+	updateChildren() {
 		this.children = this.childIds
-			? this.childIds.map(id => shapePool[id])
+			? this.childIds.map(id => this.factory.shapePool.get(id))
 			: [];
 	}
 	isEdge(){
@@ -151,6 +160,57 @@ class Shape {
 	}
 	getModel(){
 		return this.factory.modelPool.get(this.modelId);
+	}
+	addChild(shape, index){
+		if (this.children.includes(shape)) return;
+		if (index === undefined) index = this.children.length;
+		const change = new InsertTreeNodeChange({ parent: this, node: shape, index });
+		change.redo();
+		this.stepManager.addChange(change);
+
+	}
+	removeChild(shape) {
+		const index = this.children.indexOf(shape);
+		if (index === -1) return;
+		const change = new RemoveTreeNodeChange({
+			parent: this,
+			node: shape,
+			index
+		});
+		change.redo();
+		this.stepManager.addChange(change);
+	}
+	updateBounds(bounds){
+		if (
+			(bounds.x === undefined || bounds.x === this.bounds.x) && 
+			(bounds.y === undefined || bounds.y === this.bounds.y) && 
+			(bounds.width === undefined || bounds.width === this.bounds.width) && 
+			(bounds.height === undefined || bounds.height === this.bounds.height)
+		) {
+			return;
+		}
+		const change = new BoundsChange({ shape: this, bounds: { ...this.bounds, ...bounds } });
+		change.redo();
+		this.stepManager.addChange();
+
+	}
+	updateOffset(){
+
+	}
+	updateWaypoints(){
+
+	}
+	updateSource(){
+
+	}
+	updateTarget(){
+
+	}
+	updateSourcePoint(){
+
+	}
+	updateTargetPoint(){
+
 	}
 }
 
@@ -244,7 +304,7 @@ export class Factory {
 			const firstChildModelDefine =
 				sourceModel.children[0] &&
 				this.modelDefinePool.get(sourceModel.children[0].modelDefineId);
-			if (firstChildModelDefine.isRelationGroup) {
+			if (firstChildModelDefine && firstChildModelDefine.isRelationGroup) {
 				model.parentId = sourceModel.children[0].id;
 				sourceModel.children[0].addChild(model);
 			} else {
@@ -254,7 +314,8 @@ export class Factory {
 						id: getUid(),
 						parentId: sourceModel.id,
 						modelDefineId: 5,
-						attrs: cloneDeep(relationGroupModelDefine.attrs)
+						attrs: cloneDeep(relationGroupModelDefine.attrs),
+						name: "关系"
 					},
 					this
 				);
@@ -385,7 +446,18 @@ export class Factory {
 		}
 	}
 
-	createShape() {}
+	createShape(op) {
+		try {
+			this.stepManager.beginUpdate();
+
+			this.stepManager.endUpdate();
+			
+		} catch (error) {
+			this.stepManager.rollBack();
+			throw error;
+		}
+		  
+	}
 
 	updateShape() {}
 	moveShape() {}
