@@ -1,7 +1,28 @@
 [
 	{
 		"id": 3,
-		"box": {},
+		"box": {
+			"position": "absolute",
+			"visible": true,
+			"expandParent": false,
+			"width": 1400,
+			"widthUnit": "px",
+			"height": 800,
+			"heightUnit": "px",
+			"paddingTop": 0,
+			"paddingBottom": 0,
+			"paddingLeft": 0,
+			"paddingRight": 0,
+			"moveType": "notAllow",
+			"resizeType": "notAllow",
+			"expandPaddingTop": 0,
+			"expandPaddingBottom": 0,
+			"expandPaddingLeft": 0,
+			"expandPaddingRight": 0,
+			"initX": 12,
+			"initY": 12,
+			"style": "shape=umlFrame;whiteSpace=wrap;html=1;width=500;height=30;allowArrows=0;connectable=0;overflow=hidden;perimeter=none;expand=0;recursiveResize=0;editable=0;movable=0;resizable=0;rotatable=0;cloneable=0;deletable=0;movableLabel=0;rotation=0;direction=east;fillColor=#FFFFFF;swimlaneFillColor=none;"
+		},
 		"bindGetTextMethod": "getDiagramName",
 		"shapeType": "BlockDefinationDiagram"
 	},

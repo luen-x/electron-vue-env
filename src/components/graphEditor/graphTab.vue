@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-tabs v-model="app.activeDiagramId" @tab-click="handleClick">
+		<el-tabs v-model="app.activeDiagramId" type="card" editable @edit="handleTabsEdit">
 			<el-tab-pane v-for=" diagram in app.diagrams" :key="diagram.id" :label="diagram.name" :name="diagram.id">
 				<m-content :diagram="diagram" />
 			</el-tab-pane>
@@ -24,7 +24,19 @@ export default {
 	computed: {
 
 	},
+	watch: {
+ 
+	},
 	methods: {
+		handleTabsEdit(tabKey, action){
+			console.log(data, action);
+			if (action === "delete") {
+				app.diagrams.splice(app.diagrams.findIndex(di => di.id === tabKey), 1);
+				app.activeDiagramId = ( app.diagrams[0] || {} ).id;
+
+			}
+
+		}
 	}
 };
 </script>

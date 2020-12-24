@@ -29,7 +29,8 @@ export default {
 			activeProjectId: "",
 			projects: new VueMap(),
 			activeDiagramId: "",
-			diagrams: []
+			diagrams: [],
+			userId: "user-1"
 
 		};
 	},

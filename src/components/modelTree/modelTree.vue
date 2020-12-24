@@ -34,6 +34,7 @@ import { Factory } from "../../model/graphNode";
 import { cloneDeep } from "lodash";
 import { ContextMenu } from "@/components/common/ContextMenu/index";
 import graphUtil from "../graphEditor/graph/graphUtil";
+import { ArrayInsertChange, ObjectChange } from "@/model/stepManager";
 
 export default {
 	name: "comp-",
@@ -62,6 +63,7 @@ export default {
 			factory = new Factory(factoryOption);
 		}
 		this.factory = factory;
+		this.stepManager = factory.stepManager;
 		this.treeData = [factory.getRootModel()];
 		app.projects.set(this.factory.projectInfo.id, this.factory);
 	},
@@ -103,50 +105,64 @@ export default {
 			return items;
 		},
 		addNode(parentNode, menuItem) {
-			if (!menuItem.modelDefine.isRelation) {
-				const model = this.factory.createModel({
-					id: getUid(),
-					modelDefineId: menuItem.value,
-					parentId: parentNode.id,
-					name: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
-					displayName: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
-					attrs: cloneDeep(menuItem.modelDefine.attrs)
-				});
-				if (menuItem.modelDefine.isDiagram){
-					const box = cloneDeep( this.factory.shapeDefinePool.get(model.shapeDefineId));
-					this.factory.createShape({
+			try {
+				this.factory.stepManager.beginUpdate();
+			
+				if (!menuItem.modelDefine.isRelation) {
+					const model = this.factory.createModel({
 						id: getUid(),
-						parentId: undefined,
-						modelId: model.id,
-						box,
-						sourceId: undefined,
-						targetId: undefined,
-						childIds: [],
-						children: [],
-						offset: undefined,
-						waypoints: [],
-						sourcePoint: undefined,
-						targetPoint: undefined,
-						bounds: graphUtil.getBoundsByBox(box)
+						modelDefineId: menuItem.value,
+						parentId: parentNode.id,
+						name: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
+						displayName: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
+						attrs: cloneDeep(menuItem.modelDefine.attrs)
 					});
-					createShape;
-					this.handleOpenDiagram(model);
-				}
-			} else {
-				this.factory.createRelation({
-					id: getUid(),
-					modelDefineId: menuItem.value,
-					parentId: null,
-					name: menuItem.modelDefine.typeName,
-					displayName:
+					if (menuItem.modelDefine.isDiagram){
+						const box = cloneDeep( this.factory.shapeDefinePool.get(menuItem.modelDefine.shapeDefineId).box);
+						box.boxWidth = +box.width;
+						box.boxHeight = +box.height;
+						const diagramShape = this.factory.createShape({
+							id: getUid(),
+							parentId: undefined,
+							modelId: model.id,
+							box,
+							sourceId: undefined,
+							targetId: undefined,
+							childIds: [],
+							children: [],
+							offset: undefined,
+							waypoints: [],
+							sourcePoint: undefined,
+							targetPoint: undefined,
+							bounds: graphUtil.getBoundsByBox(box)
+						});
+						const change = new ObjectChange(model, "diagramShapeId", diagramShape.id);
+						change.redo();
+						this.factory.stepManager.addChange(change);
+						this.handleOpenDiagram(model);
+					}
+				} else {
+					this.factory.createRelation({
+						id: getUid(),
+						modelDefineId: menuItem.value,
+						parentId: null,
+						name: menuItem.modelDefine.typeName,
+						displayName:
 						menuItem.modelDefine.typeName +
 						parentNode.name +
 						"->" +
 						"zqq",
-					attrs: cloneDeep(menuItem.modelDefine.attrs),
-					sourceId: parentNode.id,
-					targetId: null
-				});
+						attrs: cloneDeep(menuItem.modelDefine.attrs),
+						sourceId: parentNode.id,
+						targetId: null
+					});
+				}
+				this.factory.stepManager.endUpdate();
+				
+			} catch (error) {
+				this.factory.stepManager.rollBack();
+				throw error;
+				
 			}
 		},
 		handleDelete(data) {
@@ -189,10 +205,24 @@ export default {
 			}
 		},
 		handleOpenDiagram(data){
-			const modelDefine = data.getModelDefine();
-			if (!modelDefine.isDiagram) return;
-			if (!app.diagrams.includes(data)) app.diagrams.push(data);
-			app.activeDiagramId = data.id;
+			try {
+				this.factory.stepManager.beginUpdate();
+				const modelDefine = data.getModelDefine();
+				if (!modelDefine.isDiagram) return;
+				const change = new ArrayInsertChange(app.diagrams, data);
+				change.redo();
+				change.userId = app.userId;
+				this.stepManager.addChange(change);
+				const change2 = new ObjectChange(app, "activeDiagramId", data.id);
+				change2.userId = app.userId;
+				change2.redo();
+				this.stepManager.addChange(change2);
+
+				this.factory.stepManager.endUpdate();
+			} catch (error) {
+				this.factory.stepManager.rollBack();
+				throw error;
+			}
 
 		}
 	}

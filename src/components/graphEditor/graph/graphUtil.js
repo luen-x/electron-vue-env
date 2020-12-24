@@ -38,7 +38,7 @@ const graphUtil = {
 		// if (umlShape.bounds && umlShape.bounds.offset){
 		// geo.offset = umlShape.bounds.offset;
 		// }
-		const isParentEdge = shapePool.get(shape.parentId).isEdge();
+		const isParentEdge = shape.parentId && shapePool.get(shape.parentId).isEdge();
 		if (isParentEdge) {
 			// const p = umlShape.owningElement.waypoints.toArray()[0];
 			geo.relative = true;
@@ -54,7 +54,7 @@ const graphUtil = {
 		// this.setShapeText(shape);
 		// this.setPortStyle(umlShape);
 
-		const cell = new mxCell(shapeModel.name, geo, shape.box.styles);
+		const cell = new mxCell(shapeModel.name, geo, shape.box.style);
 		// if (isReadOnlyMode()) {
 		// 	if (this.isMainCell(umlShape)) {
 		// 		let styleArr = cell.style.split(";");
@@ -107,7 +107,7 @@ const graphUtil = {
 			const cell = this.createCellByShape(shape, option);
 			if (!cell) return;
 
-			const parent = graph.model.getCell(shape.parentId);
+			const parent = shape.parentId ? graph.model.getCell(shape.parentId) : graph.model.getCell(1);
 
 			// todo source target 操作
 			// cell,

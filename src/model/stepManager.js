@@ -111,7 +111,7 @@ export class InsertTreeNodeChange extends Change {
 		this.node = op.node;
 		this.index =
 			op.index === undefined
-				? op.parent.children.indexOf(op.node)
+				? op.parent.children.length
 				: op.index;
 	}
 	redo() {
@@ -196,5 +196,55 @@ export class BoundsChange extends Change {
 	undo(){
 		Object.assign(this.shape.bounds, this.oldBounds);
 		Object.assign(this.shape.box, this.this.oldBoxBounds);
+	}
+}
+export class ObjectChange extends Change {
+	constructor(obj, key, val){
+		super();
+		this.obj = obj;
+		this.key = key;
+		this.oldVal = obj[key];
+		this.newVal = val;
+
+	}
+	redo(){
+		this.obj[this.key] = this.newVal;
+	}
+	undo(){
+		this.obj[this.key] = this.oldVal;
+	}
+}
+
+export class ArrayInsertChange extends Change {
+	constructor(arr, val, index = arr.length) {
+		super();
+		this.arr = arr;
+		this.val = val;
+		this.index = index;
+			
+	}
+	redo() {
+		this.arr.splice(this.index, 0, this.val);
+	}
+	undo() {
+		this.arr.splice(this.index, 1);
+	}
+	
+}
+export class ArrayRemoveChange extends Change {
+	constructor(arr, val) {
+		super();
+		this.arr = arr;
+		this.val = val;
+		this.index = arr.indexOf(val);
+			
+	}
+	redo() {
+		if (this.index === -1) return;
+		this.arr.splice(this.index, 1);
+	}
+	undo() {
+		if (this.index === -1) return;
+		this.arr.splice(this.index, 0, this.val);
 	}
 }

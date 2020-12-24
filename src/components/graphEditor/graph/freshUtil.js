@@ -1,7 +1,5 @@
-import { SysMLUtilHelper } from "src/api/sysml-imports";
 import graphUtil from "./graphUtil";
-import { shapeApi } from "@/api/shape/shapeApi";
-import { edgeApi } from "src/api/shape/edgeApi";
+import { shapeApi } from "@/api/shapeApi";
 import { getStyleObj, getStyleStr, uniqueArr } from "@/util/common";
 
 export default {

@@ -18,6 +18,7 @@ import {
 import PropertyBar from "./comps/propertyBar.vue";
 import Outline from "./comps/outline/outline";
 import graphUtil from "./graphUtil";
+import freshUtil from "./freshUtil";
 
 export default {
 	name: "comp-",
@@ -57,8 +58,17 @@ export default {
 	mounted() {
 		this.initGraph();
 		this.addListener();
+		this.$bus.on("fresh-graph", this.freshGraph);
+	},
+	beforeDestroy(){
+		this.$bus.off("fresh-graph", this.freshGraph);
+
 	},
 	methods: {
+		freshGraph(op){
+			freshUtil.freshGraph(this.graph, op);
+
+		},
 		initGraph() {
 			const model = new GraphModel();
 			const graph = new Graph(this.$refs.con, model);
@@ -77,6 +87,7 @@ export default {
 			// }
 			const diagramShapeId = diagram.diagramShapeId;
 			const diagramShape = this.shapePool.get(diagramShapeId);
+			debugger;
 
 			graphUtil.addCellByShape(this.graph, diagramShape, { sortEdge: true }, 0);
 		},

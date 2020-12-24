@@ -23,6 +23,8 @@ class ModelDefine {
 		this.icon = op.icon;
 		this.isRelation = op.isRelation;
 		this.isDiagram = op.isDiagram;
+		this.shapeDefineId = op.shapeDefineId; // 直接通过模型创建图形时（创建画布的shape），对应的ShapeDefineId
+
 	}
 }
 // 元模型，元模型可以创建模型实例，op是保存的json数据,也就是model.getOption返回的数据
@@ -45,7 +47,6 @@ class Model {
 		this.shapeIds = [];
 		this.childIds = op.childIds;
 		this.inEditName = false;
-		this.shapeDefineId = op.shapeDefineId;
 	}
 	getOption() {
 		return {
@@ -144,14 +145,14 @@ class Shape {
 			parentId: this.parentId,
 			modelId: this.modelId,
 			box: this.box,
-			isEdge: this.isEdge,
 			sourceId: this.sourceId,
 			targetId: this.targetId,
 			childIds: this.children.map(child => child.id),
 			offset: this.offset,
 			waypoints: this.waypoints,
 			sourcePoint: this.sourcePoint,
-			targetPoint: this.targetPoint
+			targetPoint: this.targetPoint,
+			bounds: this.bounds || {}
 		};
 	}
 	updateChildren() {
@@ -455,12 +456,16 @@ export class Factory {
 	createShape(op) {
 		try {
 			this.stepManager.beginUpdate();
-			if (!op.parentId){
-				const shape = new Shape(op);
-				this.shapePool.add(shape);
+			const shape = new Shape(op, this);
+			this.shapePool.add(shape);
+			if (op.parentId){
+				const parentShape = this.shapePool.get(op.parentId);
+				parentShape.addChild(shape);
+				
 			}
 
 			this.stepManager.endUpdate();
+			return shape;
 			
 		} catch (error) {
 			this.stepManager.rollBack();
@@ -502,6 +507,7 @@ export class Factory {
 		const result = {
 			projectInfo: this.projectInfo,
 			modelDefinePool: this.modelDefinePool.map,
+			shapeDefinePool: this.shapeDefinePool.map,
 			modelOptionPool: {},
 			relationOptionPool: {},
 			shapeOptionPool: {}
