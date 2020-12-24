@@ -68,8 +68,10 @@ export class StepManager {
 	}
 }
 class Change {
-	constructor() {
+	constructor(op) {
 		this.id = getUid();
+		this.userId = app.userId;
+		this.onlyLocal = op.onlyLocal || false; // onlyLocal表示这个change只会在本地生效,不更改model和shape,不会修改服务器上的模型，不会影响其他用户操作的change
 	}
 	undo() {}
 	redo() {}
@@ -199,8 +201,9 @@ export class BoundsChange extends Change {
 	}
 }
 export class ObjectChange extends Change {
-	constructor(obj, key, val){
-		super();
+	constructor(op){
+		super(op);
+		const { obj, key, val } = op;
 		this.obj = obj;
 		this.key = key;
 		this.oldVal = obj[key];
@@ -216,8 +219,9 @@ export class ObjectChange extends Change {
 }
 
 export class ArrayInsertChange extends Change {
-	constructor(arr, val, index = arr.length) {
-		super();
+	constructor(op ) {
+		super(op);
+		const { arr, val, index = arr.length } = op;
 		this.arr = arr;
 		this.val = val;
 		this.index = index;
@@ -232,8 +236,9 @@ export class ArrayInsertChange extends Change {
 	
 }
 export class ArrayRemoveChange extends Change {
-	constructor(arr, val) {
-		super();
+	constructor(op ) {
+		super(op);
+		const { arr, val } = op;
 		this.arr = arr;
 		this.val = val;
 		this.index = arr.indexOf(val);

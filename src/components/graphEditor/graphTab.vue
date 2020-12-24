@@ -1,6 +1,12 @@
 <template>
 	<div>
-		<el-tabs v-model="app.activeDiagramId" type="card" editable @edit="handleTabsEdit">
+		<el-tabs
+			:value="app.activeDiagramId"
+			type="card"
+			closable
+			@edit="handleTabsEdit"
+			@click="handleClickTab"
+		>
 			<el-tab-pane v-for=" diagram in app.diagrams" :key="diagram.id" :label="diagram.name" :name="diagram.id">
 				<m-content :diagram="diagram" />
 			</el-tab-pane>
@@ -8,6 +14,7 @@
 	</div>
 </template>
 <script>
+import { ArrayRemoveChange, ObjectChange } from "@/model/stepManager";
 import Content from "./content";
 export default {
 	name: "comp-",
@@ -22,6 +29,9 @@ export default {
 		};
 	},
 	computed: {
+		stepManager(){
+			return app.activeProject.stepManager;
+		}
 
 	},
 	watch: {
@@ -29,12 +39,29 @@ export default {
 	},
 	methods: {
 		handleTabsEdit(tabKey, action){
-			console.log(data, action);
-			if (action === "delete") {
-				app.diagrams.splice(app.diagrams.findIndex(di => di.id === tabKey), 1);
-				app.activeDiagramId = ( app.diagrams[0] || {} ).id;
+			console.log(tabKey, action);
+			if (action === "remove") {
+				try {
+					this.stepManager.beginUpdate();
+					const change = new ObjectChange({ obj: app, key: "activeDiagramId", val: (app.diagrams[0] || {}).id });
+					change.redo();
+					this.stepManager.addChange(change);
+					const change2 = new ArrayRemoveChange({ arr: app.diagrams, val: app.diagrams.find(i => i.id === tabKey) });
+					change2.redo();
+					this.stepManager.addChange(change2);
+					this.stepManager.endUpdate();
+					
+				} catch (error) {
+					this.stepManager.rollBack();
+					throw error;
+					
+				}
 
 			}
+
+		},
+		handleClickTab(tab){
+			console.log(tab);
 
 		}
 	}

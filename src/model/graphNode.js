@@ -8,7 +8,9 @@ import {
 	InsertTreeNodeChange,
 	RemoveTreeNodeChange,
 	UpdateAttrChange,
-	BoundsChange
+	BoundsChange,
+	ArrayRemoveChange,
+	ObjectChange
 } from "./stepManager";
 import { cloneDeep } from "lodash";
 
@@ -396,8 +398,7 @@ export class Factory {
 		try {
 			this.stepManager.beginUpdate();
 			console.log("remove", id);
-			const toRemoveModel =
-				this.modelPool.get(id) || this.relationPool.get(id);
+			const toRemoveModel = this.modelPool.get(id) || this.relationPool.get(id);
 			if (!toRemoveModel) {
 				this.stepManager.endUpdate();
 				return;
@@ -408,19 +409,20 @@ export class Factory {
 
 			if (toRemoveModel.children) {
 				[...toRemoveModel.children].forEach(child => {
-					this.removeModel(child.id);
+					this.removeModel(child.id); // 递归删除模型，从最底层的模型开始删除
 				});
 			}
-			toRemoveModel.shapeIds.forEach(shapeId => {
-				this.removeShape(shapeId);
-			});
-			if (!toRemoveModelDefine.isRelation) {
+
+			if (!toRemoveModelDefine.isRelation) { // 如果删除模型的不是关系，则需要把该模型相关的所有关系也删除
 				Object.values(this.relationPool).forEach(model => {
 					if (model.sourceId === id || model.targetId === id) {
 						this.removeModel(model.id);
 					}
 				});
 			}
+			[...toRemoveModel.shapeIds].forEach(shapeId => {
+				this.removeShape(shapeId); // 递归删除模型的图形，从最底层的模型开始删除，先删图形，再删模型
+			});
 			if (toRemoveModel.parentId) {
 				// console.log()
 				const parentModel = this.modelPool.get(toRemoveModel.parentId);
@@ -441,10 +443,30 @@ export class Factory {
 					this.modelPool.remove(parentModel.id);
 				}
 			}
-			if (toRemoveModelDefine.isRelation) {
+			if (toRemoveModelDefine.isRelation) { // 关系从关系池中删除
 				this.relationPool.remove(id);
 			} else {
-				this.modelPool.remove(id);
+				if (toRemoveModelDefine.isDiagram){
+
+					if (app.diagrams.find(i => i.id === id)){
+						const change = new ArrayRemoveChange({ arr: app.diagrams, val: toRemoveModel, onlyLocal: true } );
+						change.redo();
+						this.stepManager.addChange(change);
+
+					}
+					if (app.activeDiagramId === id){
+						const change = new ObjectChange({ obj: app, key: "activeDiagramId", val: id, onlyLocal: true });
+						change.redo();
+						this.stepManager.addChange(change);
+					}
+
+					this.modelPool.remove(id);
+
+				} else {
+					this.modelPool.remove(id);
+
+				}
+				
 			}
 			this.stepManager.endUpdate();
 		} catch (error) {

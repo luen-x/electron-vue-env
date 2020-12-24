@@ -47,25 +47,26 @@ export default {
 		};
 	},
 	mounted() {
-		let factoryOption = storage.get("project-1");
-		let factory;
-		if (!factoryOption) {
-			factory = Factory.getInitFactory("project-1");
-			factory.createModel({
-				id: getUid(),
-				parentId: null,
-				name: "Root",
-				displayName: "Root",
-				modelDefineId: 1,
-				attrs: cloneDeep(factory.modelDefinePool.get(1).attrs)
-			});
-		} else {
-			factory = new Factory(factoryOption);
-		}
+		// let factoryOption = storage.get("project-1");
+		// let factory;
+		// if (!factoryOption) {
+		// 	factory = Factory.getInitFactory("project-1");
+		// 	factory.createModel({
+		// 		id: getUid(),
+		// 		parentId: null,
+		// 		name: "Root",
+		// 		displayName: "Root",
+		// 		modelDefineId: 1,
+		// 		attrs: cloneDeep(factory.modelDefinePool.get(1).attrs)
+		// 	});
+		// } else {
+		// 	factory = new Factory(factoryOption);
+		// }
+		const factory = app.activeProject;
 		this.factory = factory;
 		this.stepManager = factory.stepManager;
 		this.treeData = [factory.getRootModel()];
-		app.projects.set(this.factory.projectInfo.id, this.factory);
+		// app.projects.set(this.factory.projectInfo.id, this.factory);
 	},
 	beforeDestroy() {
 		// this.handleSave();
@@ -209,11 +210,11 @@ export default {
 				this.factory.stepManager.beginUpdate();
 				const modelDefine = data.getModelDefine();
 				if (!modelDefine.isDiagram) return;
-				const change = new ArrayInsertChange(app.diagrams, data);
+				const change = new ArrayInsertChange({ arr: app.diagrams, val: data, onlyLocal: true });
 				change.redo();
 				change.userId = app.userId;
 				this.stepManager.addChange(change);
-				const change2 = new ObjectChange(app, "activeDiagramId", data.id);
+				const change2 = new ObjectChange({ obj: app, key: "activeDiagramId", val: data.id, onlyLocal: true });
 				change2.userId = app.userId;
 				change2.redo();
 				this.stepManager.addChange(change2);

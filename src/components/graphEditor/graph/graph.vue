@@ -87,7 +87,7 @@ export default {
 			// }
 			const diagramShapeId = diagram.diagramShapeId;
 			const diagramShape = this.shapePool.get(diagramShapeId);
-			debugger;
+			// debugger;
 
 			graphUtil.addCellByShape(this.graph, diagramShape, { sortEdge: true }, 0);
 		},
