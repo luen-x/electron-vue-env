@@ -1,5 +1,6 @@
 import { shapeApi } from "@/api/shapeApi";
 import mxGraph from "./classes/init";
+import { getStyleObj } from "@/util/common";
 const {
 	Graph,
 	GraphModel,
@@ -35,12 +36,12 @@ const graphUtil = {
 				shape.bounds.height
 			);
 
-		// if (umlShape.bounds && umlShape.bounds.offset){
-		// geo.offset = umlShape.bounds.offset;
+		// if (shape.bounds && shape.bounds.offset){
+		// geo.offset = shape.bounds.offset;
 		// }
 		const isParentEdge = shape.parentId && shapePool.get(shape.parentId).isEdge();
 		if (isParentEdge) {
-			// const p = umlShape.owningElement.waypoints.toArray()[0];
+			// const p = shape.owningElement.waypoints.toArray()[0];
 			geo.relative = true;
 			geo.x = shape.bounds.x;
 			geo.y = shape.bounds.y;
@@ -52,11 +53,11 @@ const graphUtil = {
 		}
 
 		// this.setShapeText(shape);
-		// this.setPortStyle(umlShape);
+		// this.setPortStyle(shape);
 
-		const cell = new mxCell(shapeModel.name, geo, shape.box.style);
+		const cell = new mxCell(shape.getText(), geo, shape.box.style);
 		// if (isReadOnlyMode()) {
-		// 	if (this.isMainCell(umlShape)) {
+		// 	if (this.isMainCell(shape)) {
 		// 		let styleArr = cell.style.split(";");
 		// 		styleArr = styleArr.filter(i => !i.includes("fillColor"));
 		// 		styleArr.push("fillColor=none");
@@ -102,6 +103,7 @@ const graphUtil = {
 	 */
 
 	addCellByShape(graph, shape, option, deep = 1) {
+		console.log("addCell");
 		graph.model.beginUpdate();
 		try {
 			const cell = this.createCellByShape(shape, option);
@@ -199,15 +201,16 @@ const graphUtil = {
 		if (newGeo) {
 			model.setGeometry(cell, newGeo);
 		}
-		// this.setPortStyle(umlShape);
+		// this.setPortStyle(shape);
 
 		if (shape.box.style !== cell.style) {
 			model.setStyle(cell, shape.box.style);
 		}
 
-		// this.setShapeText(umlShape);
-		if (shapeModel.name !== cell.value) {
-			model.setValue(cell, shapeModel.name);
+		// this.setShapeText(shape);
+		const text = shape.getText();
+		if (text !== cell.value) {
+			model.setValue(cell, text);
 		}
 		if (shape.box.visible !== cell.visible) {
 			model.setVisible(cell, shape.box.visible);
@@ -226,8 +229,24 @@ const graphUtil = {
 		}
 		
 	},
+	  /**
+   *根据shapes 批量更新cell,recurse可以控制是否递归更新子元素
+   * @param {Object} graph
+   * @param {Array<Shape>} shapes
+   * @param {Boolean} recurse 是否递归更新子元素
+   */
+	updateCellsByShapes(graph, shapes, recurse){
+		shapes.forEach(shape => {
+			if (!shape.box.visible) return;
+			this.updateCellByShape(graph, shape);
+			if (recurse && shape.children){
+				this.updateCellsByShapes(graph, shape.children, recurse);
+			}
+		});
+
+	},
 	/**
- * 根据cellId删除cell，cellId就是umlShape的Id
+ * 根据cellId删除cell，cellId就是shape的Id
  * @param {*} graph
  * @param {*} ids
  */
@@ -242,10 +261,9 @@ const graphUtil = {
 		});
 		// 	todo 也可以考虑使用 graph.removeCells
 	},
-	getDiagramTitle(shape){
-		const shapeModel = shape.getModel();
-		const parentShapeModel = shape.factory.modelPool.get(shapeModel.parentId);
-		const modelDefine = shape.factory.modelDefinePool.get(model.modelDefineId);
+	getDiagramTitle(shapeModel){
+		const parentShapeModel = shapeModel.factory.modelPool.get(shapeModel.parentId);
+		const modelDefine = shapeModel.factory.modelDefinePool.get(shapeModel.modelDefineId);
 		return `${modelDefine.shortTypeName || "shortName"}&nbsp;&nbsp;&nbsp;&nbsp;[ ${modelDefine.typeName} ]&nbsp;${parentShapeModel.name} [${shapeModel.name}]`;
 
 	// 	if (diagram.getModelElements().toArray().length > 0){
@@ -273,11 +291,48 @@ const graphUtil = {
 		const width = size.width + dx + 4;
 		return width;
 	},
+	  /**
+   * 根据鼠标event的位置获取该点相对某个cell的位置
+   * @param {*} x 鼠标事件的clientX
+   * @param {*} y 鼠标事件的clientY
+   * @param {*} cell 目标cell
+   */
+	getRelativePoint(graph, cell, x, y){
+
+		const graphCon = graph.container;
+		const absGeo = { x: 0, y: 0 };
+
+		let geo = cell.geometry;
+		while (geo) {
+			absGeo.y += geo.y;
+			absGeo.x += geo.x;
+			geo = cell.parent.geometry;
+			cell = cell.parent;
+		}
+		const rect = graphCon.getBoundingClientRect();
+
+		const relativeY = (y - rect.top - ((absGeo.y + graph.view.translate.y) * graph.view.scale - graphCon.scrollTop)) / graph.view.scale;
+		const relativeX = (x - rect.left - ((absGeo.x + graph.view.translate.x) * graph.view.scale - graphCon.scrollLeft)) / graph.view.scale;
+
+		return { x: relativeX, y: relativeY };
+
+	},
 	isEmpty(val){
 		return val === undefined || val === null;
 
 	},
-	getBoundsByBox(box){
+	getInitBox(box, parent, point){
+		return {
+			...box,
+			boxWidth: box.widthUnit === "%" ? parent.box.boxWidth * box.width / 100 : box.width,
+			boxHeight: box.heightUni === "%" ? parent.box.boxHeight * box.height / 100 : box.height,
+			boxX: point ? point.x : box.initX,
+			boxY: point ? point.y : box.initY
+
+		};
+
+	},
+	getBoundsByBox(box, parent){
 		return {
 			x: (this.isEmpty(box.boxX) ? box.initX || 0 : box.boxX) + box.paddingLeft,
 			y: (this.isEmpty(box.boxY) ? box.initY || 0 : box.boxY) + box.paddingTop,
@@ -289,7 +344,24 @@ const graphUtil = {
 		// shape.bounds.width = shape.localStyle.boxInfo.boxWidth - shape.localStyle.boxInfo.paddingLeft - shape.localStyle.boxInfo.paddingRight;
 		// shape.bounds.height = shape.localStyle.boxInfo.boxHeight - shape.localStyle.boxInfo.paddingTop - shape.localStyle.boxInfo.paddingBottom;
 	
-	}
+	},
+	getTextHeight(text, styleStr, textWidth){
+		// debugger;
+		const style = getStyleObj(styleStr);
+		let dy = 0;
+		dy += 2 * (style[mxConstants.STYLE_SPACING] || 0);
+		dy += style[mxConstants.STYLE_SPACING_TOP] || 0;
+		dy += style[mxConstants.STYLE_SPACING_BOTTOM] || 0;
+		text = text.replace(/\n/g, "<br>");
+		const fontSize = style[mxConstants.STYLE_FONTSIZE] || mxConstants.DEFAULT_FONTSIZE;
+		let size = mxUtils.getSizeForString(text || "1", fontSize,
+		  style[mxConstants.STYLE_FONTFAMILY], textWidth,
+		  style[mxConstants.STYLE_FONTSTYLE]);
+		// const width = size.width + dx;
+		const height = size.height + dy + 4;
+		return height;
+	
+	  }
 };
 
 export default graphUtil;

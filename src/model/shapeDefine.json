@@ -1,6 +1,9 @@
 [
 	{
 		"id": 3,
+		"bindGetTextMethod": "getDiagramName",
+		"shapeType": "BlockDefinationDiagram",
+		"isMainShape": true,
 		"box": {
 			"position": "absolute",
 			"visible": true,
@@ -22,42 +25,108 @@
 			"initX": 12,
 			"initY": 12,
 			"style": "shape=umlFrame;whiteSpace=wrap;html=1;width=500;height=30;allowArrows=0;connectable=0;overflow=hidden;perimeter=none;expand=0;recursiveResize=0;editable=0;movable=0;resizable=0;rotatable=0;cloneable=0;deletable=0;movableLabel=0;rotation=0;direction=east;fillColor=#FFFFFF;swimlaneFillColor=none;"
-		},
-		"bindGetTextMethod": "getDiagramName",
-		"shapeType": "BlockDefinationDiagram"
+		}
 	},
 	{
 		"id": 1,
-		"box": {},
 		"bindGetTextMethod": "",
 		"shapeType": "Block",
-		"children": [
-			{
-				"id": 1.1,
-				"box": {},
-				"bindGetTextMethod": "getKeyword",
-				"shapeType": "keywordLabel"
-			},
-			{
-				"id": 1.2,
-				"box": {},
-				"bindGetTextMethod": "getName",
-				"shapeType": "nameLabel"
-			}
-		]
+		"isMainShape": true,
+		"childIds": [1.1, 1.2],
+		"box": {
+			"position": "absolute",
+			"expandParent": true,
+			"width": 120,
+			"widthUnit": "px",
+			"height": 45,
+			"heightUnit": "px",
+			"paddingTop": 0,
+			"paddingBottom": 0,
+			"paddingLeft": 0,
+			"paddingRight": 0,
+			"moveType": "allow",
+			"resizeType": "allow",
+			"expandPaddingTop": 20,
+			"expandPaddingBottom": 4,
+			"expandPaddingLeft": 4,
+			"expandPaddingRight": 4,
+			"initX": 0,
+			"initY": 0,
+			"visible":true,
+			"style": "rounded=0;whiteSpace=wrap;html=1;fillColor=#DDCD9E;gradientDirection=south;gradientColor=#FFFFFF;strokeColor=#99795C;shadow=1;rotatable=0;autosize=1;editable=0;points=[];allowArrows=0;fontSize=9;align=center;verticalAlign=top;resizable=1;"
+		}
 	},
 	{
+		"id": 1.1,
+		"bindGetTextMethod": "getKeyword",
+		"shapeType": "keywordLabel",
+		"box": {
+			"position": "flow",
+			"expandParent": true,
+			"width": 100,
+			"widthUnit": "%",
+			"height": 20,
+			"heightUnit": "px",
+			"paddingTop": 8,
+			"paddingBottom": 0,
+			"paddingLeft": 0,
+			"paddingRight": 0,
+			"moveType": "notAllow",
+			"resizeType": "notAllow",
+			"expandPaddingTop": 0,
+			"expandPaddingBottom": 0,
+			"expandPaddingLeft": 0,
+			"expandPaddingRight": 0,
+			"initX": 0,
+			"initY": 0,
+			"visible":true,
+			"style": "text;fillColor=none;align=center;verticalAlign=middle;rounded=0;shadow=0;glass=0;comic=0;imageAspect=0;connectable=0;allowArrows=0;recursiveResize=0;expand=0;movable=0;resizable=0;rotatable=0;cloneable=0;deletable=0;pointerEvents=0;editable=0;whiteSpace=wrap;html=1;points=[];autosize=0;resizeHeight=0;resizeWidth=1;opacity=0;horizontal=1;textDirection=ltr;expand=0;"
+		}
+	},
+	{
+		"id": 1.2,
+		"bindGetTextMethod": "getName",
+		"shapeType": "nameLabel",
+		"box": {
+			"position": "flow",
+			"expandParent": true,
+			"width": 100,
+			"widthUnit": "%",
+			"height": 20,
+			"heightUnit": "px",
+			"paddingTop": 8,
+			"paddingBottom": 0,
+			"paddingLeft": 0,
+			"paddingRight": 0,
+			"moveType": "notAllow",
+			"resizeType": "notAllow",
+			"expandPaddingTop": 0,
+			"expandPaddingBottom": 0,
+			"expandPaddingLeft": 0,
+			"expandPaddingRight": 0,
+			"initX": 0,
+			"initY": 0,
+			"visible":true,
+			"style": "text;fillColor=none;align=center;verticalAlign=middle;rounded=0;shadow=0;glass=0;comic=0;imageAspect=0;connectable=0;allowArrows=0;recursiveResize=0;expand=0;movable=0;resizable=0;rotatable=0;cloneable=0;deletable=0;pointerEvents=0;editable=0;whiteSpace=wrap;html=1;points=[];autosize=0;resizeHeight=0;resizeWidth=1;opacity=0;horizontal=1;textDirection=ltr;expand=0;"
+		}
+	},
+
+	{
 		"id": 2,
-		"box": {},
+		"box": {
+			"visible":true
+		},
 		"bindGetTextMethod": "",
-		"shapeType": "Block",
-		"children": [
-			{
-				"id": 2.1,
-				"box": {},
-				"bindGetTextMethod": "getName",
-				"shapeType": "nameLabel"
-			}
-		]
+		"shapeType": "Package",
+		"isMainShape": true,
+		"childIds": [2.1]
+	},
+	{
+		"id": 2.1,
+		"box": {
+			"visible":true
+		},
+		"bindGetTextMethod": "getName",
+		"shapeType": "nameLabel"
 	}
 ]

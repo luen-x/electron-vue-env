@@ -10,9 +10,11 @@ import {
 	UpdateAttrChange,
 	BoundsChange,
 	ArrayRemoveChange,
-	ObjectChange
+	ObjectChange,
+	BoxBoundsChange
 } from "./stepManager";
 import { cloneDeep } from "lodash";
+import graphUtil from "@/components/graphEditor/graph/graphUtil";
 
 // 元元模型定义，根据元元模型定义可以创建元模型，相当于模型的模型,元元模型定义实际上是json配置（op），此处只是定义json格式
 class ModelDefine {
@@ -31,6 +33,21 @@ class ModelDefine {
 }
 // 元模型，元模型可以创建模型实例，op是保存的json数据,也就是model.getOption返回的数据
 // children属性表达了模型之间的包含关系（除了relationGroup），这里是为了树渲染能够更快才放到的children里，除了relationGroup之外，所有children关系都应对应一条类型为contain的Relation
+/**
+ * op
+ {
+ 	id:getUid(),
+  parentId:'',
+  modelDefineId:'',
+  name:'',
+  displayName:'',
+  attrs:'',
+
+  sourceId:'',
+  targetId:''
+  
+  }
+ */
 class Model {
 	constructor(op, factory) {
 		this.factory = factory;
@@ -105,6 +122,22 @@ class Model {
 	getModelDefine(){
 		return this.factory.modelDefinePool.get(this.modelDefineId);
 	}
+	getParentModel(){
+		return this.factory.modelPool.get( this.parentId);
+	}
+	getName(){
+		return this.name;
+
+	}
+	getKeyword(){
+		return this.getModelDefine().typeName;
+
+	}
+	getDiagramName(){
+		const parentShapeModel = this.factory.modelPool.get(this.parentId);
+		const modelDefine = this.factory.modelDefinePool.get(this.modelDefineId);
+		return `${modelDefine.shortTypeName || "shortName"}    ;[ ${modelDefine.typeName} ] ;${parentShapeModel.name} [${this.name}]`;
+	}
 }
 class Relation extends Model {
 	constructor(op, factory) {
@@ -123,6 +156,14 @@ class RelationGroup extends Model {
 }
 
 // 元图形，根据元图形可以创建图形实例，需要根据模型的typeName以及parentModelDefineId去box配置中找到对应的box配置，准备好op后才可以new Shape
+/**
+ {
+	 id:getUid(),
+parentId:'',
+modelId:'',
+
+ }
+ */
 class Shape {
 	constructor(op, factory) {
 		this.factory = factory;
@@ -130,7 +171,10 @@ class Shape {
 		this.id = op.id;
 		this.parentId = op.parentId;
 		this.modelId = op.modelId;
+		this.shapeDefineId = op.shapeDefineId;
 		this.box = op.box;
+		this.bounds = op.bounds || {};
+
 		this.sourceId = op.sourceId;
 		this.targetId = op.targetId;
 		this.childIds = op.childIds;
@@ -139,13 +183,13 @@ class Shape {
 		this.waypoints = op.waypoints;
 		this.sourcePoint = op.sourcePoint;
 		this.targetPoint = op.targetPoint;
-		this.bounds = op.bounds || {};
 	}
 	getOption() {
 		return {
 			id: this.id,
 			parentId: this.parentId,
 			modelId: this.modelId,
+			shapeDefineId: this.shapeDefineId,
 			box: this.box,
 			sourceId: this.sourceId,
 			targetId: this.targetId,
@@ -168,10 +212,22 @@ class Shape {
 	getModel(){
 		return this.factory.modelPool.get(this.modelId);
 	}
+	getParent(){
+		return this.factory.shapePool.get(this.parentId);
+	}
+	getText(){
+		const shapeDefine = this.factory.shapeDefinePool.get(this.shapeDefineId);
+		if (!shapeDefine.bindGetTextMethod) return "";
+		const model = this.getModel();
+		if (!model[shapeDefine.bindGetTextMethod]) return "";
+		return model[shapeDefine.bindGetTextMethod]() || "";
+		
+	}
+
 	addChild(shape, index){
 		if (this.children.includes(shape)) return;
 		if (index === undefined) index = this.children.length;
-		const change = new InsertTreeNodeChange({ parent: this, node: shape, index });
+		const change = new InsertTreeNodeChange({ parent: this, node: shape, index, freshGraph: true });
 		change.redo();
 		this.stepManager.addChange(change);
 
@@ -182,7 +238,8 @@ class Shape {
 		const change = new RemoveTreeNodeChange({
 			parent: this,
 			node: shape,
-			index
+			index,
+			freshGraph: true
 		});
 		change.redo();
 		this.stepManager.addChange(change);
@@ -198,7 +255,13 @@ class Shape {
 		}
 		const change = new BoundsChange({ shape: this, bounds: { ...this.bounds, ...bounds } });
 		change.redo();
-		this.stepManager.addChange();
+		this.stepManager.addChange(change);
+
+	}
+	updateBoxBounds(boxBounds){
+		const change = new BoxBoundsChange({ shape: this, boxBounds });
+		change.redo();
+		this.stepManager.addChange(change);
 
 	}
 	updateOffset(){
@@ -274,7 +337,6 @@ export class Factory {
 		});
 		Object.values(this.modelPool.map).forEach(model => {
 			const modelDefine = this.modelDefinePool.get(model.modelDefineId);
-			// if (model.isRelationGroup) debugger;
 			model.updateChildren(
 				modelDefine.isRelationGroup
 					? this.relationPool.map
@@ -343,7 +405,7 @@ export class Factory {
 	}
 	createModel(op) {
 		try {
-			console.log("create");
+			console.log("create model");
 			this.stepManager.beginUpdate();
 			const { modelDefineId } = op;
 			const modelDefine = this.modelDefinePool.get(modelDefineId);
@@ -397,7 +459,7 @@ export class Factory {
 	removeModel(id) {
 		try {
 			this.stepManager.beginUpdate();
-			console.log("remove", id);
+			console.log("remove model", id);
 			const toRemoveModel = this.modelPool.get(id) || this.relationPool.get(id);
 			if (!toRemoveModel) {
 				this.stepManager.endUpdate();
@@ -478,13 +540,30 @@ export class Factory {
 
 	createShape(op) {
 		try {
+			console.log("create shape");
 			this.stepManager.beginUpdate();
+			const shapeDefine = this.shapeDefinePool.get(op.shapeDefineId);
 			const shape = new Shape(op, this);
 			this.shapePool.add(shape);
 			if (op.parentId){
 				const parentShape = this.shapePool.get(op.parentId);
 				parentShape.addChild(shape);
 				
+			}
+			if (shapeDefine.childIds){
+				shapeDefine.childIds.forEach(childId => {
+					const shapeDefine = this.shapeDefinePool.get(childId);
+					const initBox = { ...shapeDefine.box };
+
+					this.createShape({
+						id: getUid(),
+						parentId: shape.id,
+						shapeDefineId: childId,
+						modelId: op.modelId,
+						box: initBox,
+						bounds: {}
+					});
+				});
 			}
 
 			this.stepManager.endUpdate();

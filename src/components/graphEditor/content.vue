@@ -1,7 +1,7 @@
 <template>
 	<div class="v-graph-editor-content">
-		<m-sider-bar class="g-flex-0" :diagram="diagram" />
-		<m-graph class="g-flex-1" :diagram="diagram" />
+		<m-sider-bar ref="siderBar" class="g-flex-0" :diagram="diagram" />
+		<m-graph class="g-flex-1" :diagram="diagram" :get-sider-bar-drag-data="getSiderBarDragData" />
 	</div>
 </template>
 <script>
@@ -14,6 +14,7 @@ export default {
 	components: {
 		"m-sider-bar": SiderBar,
 		"m-graph": Graph
+		
 	},
 	props: {
 		diagram: Object
@@ -21,7 +22,12 @@ export default {
 	data() {
 		return {};
 	},
-	methods: {}
+	methods: {
+		getSiderBarDragData(){
+			return this.$refs.siderBar.dragData;
+		}
+
+	}
 };
 </script>
 <style lang="scss">

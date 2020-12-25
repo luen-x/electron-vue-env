@@ -35,6 +35,7 @@ import { cloneDeep } from "lodash";
 import { ContextMenu } from "@/components/common/ContextMenu/index";
 import graphUtil from "../graphEditor/graph/graphUtil";
 import { ArrayInsertChange, ObjectChange, OpenDiagramChange } from "@/model/stepManager";
+import { resizeUtil } from "../graphEditor/graph/resizeUtil";
 
 export default {
 	name: "comp-",
@@ -119,14 +120,15 @@ export default {
 						attrs: cloneDeep(menuItem.modelDefine.attrs)
 					});
 					if (menuItem.modelDefine.isDiagram){
-						const box = cloneDeep( this.factory.shapeDefinePool.get(menuItem.modelDefine.shapeDefineId).box);
-						box.boxWidth = +box.width;
-						box.boxHeight = +box.height;
+						const shapeDefine = this.factory.shapeDefinePool.get(menuItem.modelDefine.shapeDefineId);
+						const box = shapeDefine.box;
+						const initBox = { ...box };
 						const diagramShape = this.factory.createShape({
 							id: getUid(),
 							parentId: undefined,
 							modelId: model.id,
-							box,
+							shapeDefineId: shapeDefine.id,
+							box: initBox,
 							sourceId: undefined,
 							targetId: undefined,
 							childIds: [],
@@ -135,8 +137,9 @@ export default {
 							waypoints: [],
 							sourcePoint: undefined,
 							targetPoint: undefined,
-							bounds: graphUtil.getBoundsByBox(box)
+							bounds: {}
 						});
+						resizeUtil.initShape(diagramShape);
 						const objChange = new ObjectChange({ obj: model, key: "diagramShapeId", val: diagramShape.id });
 						objChange.redo();
 						this.stepManager.addChange(objChange);
@@ -144,7 +147,6 @@ export default {
 						change2.redo();
 						
 						this.stepManager.addChange(change2);
-
 					}
 				} else {
 					this.factory.createRelation({

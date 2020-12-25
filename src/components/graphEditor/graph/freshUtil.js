@@ -24,17 +24,18 @@ export default {
 
 		if (all) {
 			this.updateDiagramName(graph);
+			const diagramShape = diagram.factory.shapePool.get(diagram.diagramShapeId);
 
-			const flatShapes = this.getFlatShapes(diagram);
+			const flatShapes = this.getFlatShapes(diagramShape);
 			const cells = graph.model.cells;
 			const modelCells = Object.keys(cells).map(key => cells[key]);
 			// 如果没有对应的cell则创建cell
 			flatShapes.forEach(shape => {
 				if (!cells[shape.id]) {
-					graphUtil.addCellByUmlShape(graph, shape, {}, shape.deep);
+					graphUtil.addCellByShape(graph, shape, {}, shape.deep);
 				}
 			});
-			// 如果cell没有对应的umlShape则移除cell,
+			// 如果cell没有对应的shape则移除cell,
 			const removeCells = modelCells.filter(
 				cell =>
 					!flatShapes.find(shape => shape.id === cell.id) &&
@@ -47,7 +48,7 @@ export default {
 			);
 
 			// 递归差异对比，更新所有cell
-			graphUtil.updateCellsByUmlShapes(graph, [diagram], true);
+			graphUtil.updateCellsByShapes(graph, [diagramShape], true);
 			// const edges = modelCells.filter(cell => cell.edge);
 			// this.freshEdgeLabelPosition(graph, edges,);
 		} else if (modelId) {
@@ -66,7 +67,7 @@ export default {
 		this.handleModelUpdate(graph, id);
 	},
 	freshGraphByShapeId(graph, id) {
-		graphUtil.updateCellByUmlShape(graph, graph.model.cells[id].umlShape);
+		graphUtil.updateCellByShape(graph, graph.model.cells[id].shape);
 	},
 	// 模型更新引起图形更新 ,  如果是当前的diagram更新需要刷新diagram名字，
 	handleModelUpdate(graph, id) {
@@ -76,7 +77,7 @@ export default {
 
 		// 根据模型id获取当前diagram下的所有umlshape
 		console.log(graph);
-		const umlShapes = shapeApi.getShapeByModel({
+		const shapes = shapeApi.getShapeByModel({
 			model,
 			diagram: graph.diagram
 		});
@@ -88,11 +89,11 @@ export default {
 		// 如果没有对应的cell则创建cell
 		flatShapes.forEach(shape => {
 			if (!cells[shape.id]) {
-				graphUtil.addCellByUmlShape(graph, shape, {}, shape.deep);
+				graphUtil.addCellByShape(graph, shape, {}, shape.deep);
 			}
 		});
 
-		// 如果cell没有对应的umlShape则移除cell,
+		// 如果cell没有对应的shape则移除cell,
 		const modelCells = Object.keys(cells)
 			.map(key => cells[key])
 			.filter(ce => ce.modelId === model.id);
@@ -105,19 +106,19 @@ export default {
 		);
 
 		// 递归差异对比，更新所有cell
-		graphUtil.updateCellsByUmlShapes(graph, umlShapes, true);
+		graphUtil.updateCellsByShapes(graph, shapes, true);
 	},
-	getFlatShapes(umlShapes, flatArr, deep = 0) {
-		if (!Array.isArray(umlShapes)) {
-			umlShapes = [umlShapes];
+	getFlatShapes(shapes, flatArr = [], deep = 0) {
+		if (!Array.isArray(shapes)) {
+			shapes = [shapes];
 		}
-		umlShapes.forEach(shape => {
-			if (!shape.getLocalStyle().isDisplay) return;
+		shapes.forEach(shape => {
+			if (!shape.box.visible) return;
 			flatArr.push(shape);
 			shape.deep = deep;
-			if (edgeApi.isEdgeShape(shape)) return;
-			const chidShapes =
-				shape.umlDiagramElement && shape.umlDiagramElement.toArray();
+			// if (shape.isEdge()) return;
+			const chidShapes = shape.children;
+			// shape.umlDiagramElement && shape.umlDiagramElement.toArray();
 			if (chidShapes && chidShapes.length) {
 				this.getFlatShapes(chidShapes, flatArr, deep + 1);
 			}
@@ -129,17 +130,17 @@ export default {
     diagram.text = graphUtil.getDiagramTitle(diagram);
   }, */
 	updateDiagramName(graph) {
-		const diagram = graph.diagram;
-		diagram.name = graphUtil.getDiagramTitle(diagram);
+		// const diagram = graph.diagram;
+		// diagram.name = graphUtil.getDiagramTitle(diagram);
 
-		const width = graphUtil.getTextWidth(
-			diagram.name,
-			diagram.box.style
-		);
-		const style = getStyleObj(diagram.box.style);
-		style.width = width + 10;
-		const styleStr = getStyleStr(style);
-		shapeApi.updateShapes({ oldShape: diagram, styles: styleStr });
+		// const width = graphUtil.getTextWidth(
+		// 	diagram.name,
+		// 	diagram.box.style
+		// );
+		// const style = getStyleObj(diagram.box.style);
+		// style.width = width + 10;
+		// const styleStr = getStyleStr(style);
+		// shapeApi.updateShapes({ oldShape: diagram, styles: styleStr });
 	},
 	freshEdgeLabelPosition(graph, edges) {
 		edges.forEach(edge => {
@@ -153,7 +154,7 @@ export default {
 				const edgeLabelPosition = graph.view.getState(label).style
 					.edgeLabelPosition;
 				console.log(graph.view.getState(label).style);
-				const labelWidth = label.umlShape.bounds.width;
+				const labelWidth = label.shape.bounds.width;
 				if (!edgeLabelPosition) return;
 				const x = this.getEdgeLabelX(
 					edgeLength,
@@ -163,7 +164,7 @@ export default {
 
 				console.log(x, label);
 				if (x !== label.geometry.offset.x) {
-					label.umlShape.bounds.x = x;
+					label.shape.bounds.x = x;
 					const newGeo = label.geometry.clone();
 					newGeo.x = x;
 					graph.model.setGeometry(label, newGeo);

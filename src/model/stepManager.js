@@ -1,4 +1,4 @@
-const { getUid } = require("../util/common");
+const { getUid, pickProp } = require("../util/common");
 
 // 计步器，计步器中的steps代表每一步用户操作，每一用户操作是由一个或多个change实例组成的，
 // 每个change实例都必须实现redo，和undo
@@ -25,6 +25,7 @@ export class StepManager {
 	}
 	addChange(change) {
 		if (!this.updatingDeep) throw new Error("必须先beginUpdate");
+		if (!change) throw new Error("change 不能为空");
 		this.curStepChanges.push(change);
 	}
 	endUpdate() {
@@ -133,6 +134,7 @@ export class RemovePoolChange extends Change {
 		delete this.pool[this.item.id];
 	}
 }
+// 对图形的变更，freshGraph则是true， 画布的刷新是带了防抖的，刷新不会立刻触发
 export class InsertTreeNodeChange extends Change {
 	constructor(op) {
 		super(op);
@@ -142,12 +144,19 @@ export class InsertTreeNodeChange extends Change {
 			op.index === undefined
 				? op.parent.children.length
 				: op.index;
+		this.freshGraph = op.freshGraph;
 	}
 	redo() {
 		this.parentNode.children.splice(this.index, 0, this.node);
+		if (this.freshGraph){
+			app.$bus.emit("fresh-graph");
+		}
 	}
 	undo() {
 		this.parentNode.children.splice(this.index, 1);
+		if (this.freshGraph){
+			app.$bus.emit("fresh-graph");
+		}
 	}
 }
 export class RemoveTreeNodeChange extends Change {
@@ -160,12 +169,19 @@ export class RemoveTreeNodeChange extends Change {
 		this.parentNode = op.parent;
 		this.node = op.node;
 		this.index = op.index;
+		this.freshGraph = op.freshGraph;
 	}
 	undo() {
 		this.parentNode.children.splice(this.index, 0, this.node);
+		if (this.freshGraph){
+			app.$bus.emit("fresh-graph");
+		}
 	}
 	redo() {
 		this.parentNode.children.splice(this.index, 1);
+		if (this.freshGraph){
+			app.$bus.emit("fresh-graph");
+		}
 	}
 }
 
@@ -187,21 +203,23 @@ export class UpdateAttrChange extends Change {
 		}
 	}
 	undo() {
-		// debugger;
 		this.attr.value = this.oldValue;
 		if (this.attrKey === "name") {
 			this.model.name = this.oldValue;
 		}
 	}
 }
-
+/**
+ * BoundsChange同时维护box和bounds的变化
+ * 参数 {shape,bounds}
+ */
 export class BoundsChange extends Change {
 	constructor(op){
 		super(op);
 		const { shape, bounds } = op;
-		const box = this.shape.box;
 
 		this.shape = shape;
+		const box = this.shape.box;
 		this.oldBounds = { ...this.shape.bounds };
 		this.newBounds = { ...bounds };
 		this.oldBoxBounds = {
@@ -220,12 +238,59 @@ export class BoundsChange extends Change {
 	redo(){
 		Object.assign(this.shape.bounds, this.newBounds);
 		Object.assign(this.shape.box, this.newBoxBounds);
+		app.$bus.emit("fresh-graph");
 	
 	}
 	undo(){
 		Object.assign(this.shape.bounds, this.oldBounds);
-		Object.assign(this.shape.box, this.this.oldBoxBounds);
+		Object.assign(this.shape.box, this.oldBoxBounds);
+		app.$bus.emit("fresh-graph");
 	}
+}
+
+export class BoxBoundsChange extends Change {
+	constructor(op){
+		super(op);
+		const { shape, boxBounds } = op;
+
+		this.shape = shape;
+		this.oldBoxBounds = pickProp(shape.box, ["boxX", "boxY", "boxWidth", "boxHeight"]);
+		this.newBoxBounds = { ...this.oldBoxBounds, ...boxBounds };
+		
+		this.oldBounds = { ...shape.bounds };
+		this.newBounds = { 
+			x: this.newBoxBounds.boxX + this.shape.box.paddingLeft,
+			y: this.newBoxBounds.boxY + this.shape.box.paddingTop,
+			width: this.newBoxBounds.boxWidth - this.shape.box.paddingLeft - this.shape.box.paddingRight,
+			height: this.newBoxBounds.boxHeight - this.shape.box.paddingTop - this.shape.box.paddingBottom
+
+		};
+
+		// this.oldBoxBounds = {
+		// 	boxX: this.shape.boxX,
+		// 	boxY: this.shape.boxY,
+		// 	boxWidth: this.shape.boxWidth,
+		// 	boxHeight: this.shape.boxHeight
+		// };
+		// this.newBoxBounds = {
+		// 	boxX: bounds.x - box.paddingLeft,
+		// 	boxY: bounds.y - box.paddingTop,
+		// 	boxWidth: bounds.width + box.paddingLeft + box.paddingRight,
+		// 	boxHeight: bounds.height + box.paddingTop + box.paddingBottom
+		// };
+	}
+	redo(){
+		Object.assign(this.shape.bounds, this.newBounds);
+		Object.assign(this.shape.box, this.newBoxBounds);
+		app.$bus.emit("fresh-graph");
+	
+	}
+	undo(){
+		Object.assign(this.shape.bounds, this.oldBounds);
+		Object.assign(this.shape.box, this.oldBoxBounds);
+		app.$bus.emit("fresh-graph");
+	}
+
 }
 export class ObjectChange extends Change {
 	constructor(op){
