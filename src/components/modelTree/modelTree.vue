@@ -34,7 +34,7 @@ import { Factory } from "../../model/graphNode";
 import { cloneDeep } from "lodash";
 import { ContextMenu } from "@/components/common/ContextMenu/index";
 import graphUtil from "../graphEditor/graph/graphUtil";
-import { ArrayInsertChange, ObjectChange } from "@/model/stepManager";
+import { ArrayInsertChange, ObjectChange, OpenDiagramChange } from "@/model/stepManager";
 
 export default {
 	name: "comp-",
@@ -137,10 +137,14 @@ export default {
 							targetPoint: undefined,
 							bounds: graphUtil.getBoundsByBox(box)
 						});
-						const change = new ObjectChange(model, "diagramShapeId", diagramShape.id);
-						change.redo();
-						this.factory.stepManager.addChange(change);
-						this.handleOpenDiagram(model);
+						const objChange = new ObjectChange({ obj: model, key: "diagramShapeId", val: diagramShape.id });
+						objChange.redo();
+						this.stepManager.addChange(objChange);
+						const change2 = new OpenDiagramChange({ diagramId: model.id });
+						change2.redo();
+						
+						this.stepManager.addChange(change2);
+
 					}
 				} else {
 					this.factory.createRelation({

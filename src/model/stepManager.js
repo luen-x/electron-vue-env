@@ -35,6 +35,7 @@ export class StepManager {
 			this.steps.length = this.curStepIndex + 1;
 			this.steps.push(step);
 			this.curStepIndex++;
+			this.curStepChanges = [];
 		}
 	}
 	rollBack() {
@@ -75,6 +76,32 @@ class Change {
 	}
 	undo() {}
 	redo() {}
+}
+
+// export class CustomChange extends Change {
+// 	constructor(op){
+// 		super(op);
+// 		this.onlyLocal = true;
+// 		this.undo = op.undo;
+// 		this.redo = op.redo;
+// 	}
+// 	// undo(){
+
+// 	// }
+// }
+export class OpenDiagramChange extends Change{
+	constructor(op){
+		super(op);
+		this.diagramId = op.diagramId;
+		this.onlyLocal = true;
+		// this.type = op.type || "open"; // open / remove 
+	}
+	redo(){
+		app.$bus.emit("diagram-open", this.diagramId);
+	}
+	undo(){
+		app.$bus.emit("diagram-remove", this.diagramId);
+	}
 }
 export class InsertPoolChange extends Change {
 	/**

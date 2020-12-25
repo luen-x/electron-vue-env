@@ -449,16 +449,17 @@ export class Factory {
 				if (toRemoveModelDefine.isDiagram){
 
 					if (app.diagrams.find(i => i.id === id)){
-						const change = new ArrayRemoveChange({ arr: app.diagrams, val: toRemoveModel, onlyLocal: true } );
-						change.redo();
-						this.stepManager.addChange(change);
+						app.$bus.emit("diagram-remove", id);
+						// const change = new ArrayRemoveChange({ arr: app.diagrams, val: toRemoveModel, onlyLocal: true } );
+						// change.redo();
+						// this.stepManager.addChange(change);
 
 					}
-					if (app.activeDiagramId === id){
-						const change = new ObjectChange({ obj: app, key: "activeDiagramId", val: id, onlyLocal: true });
-						change.redo();
-						this.stepManager.addChange(change);
-					}
+					// if (app.activeDiagramId === id){
+					// 	const change = new ObjectChange({ obj: app, key: "activeDiagramId", val: id, onlyLocal: true });
+					// 	change.redo();
+					// 	this.stepManager.addChange(change);
+					// }
 
 					this.modelPool.remove(id);
 

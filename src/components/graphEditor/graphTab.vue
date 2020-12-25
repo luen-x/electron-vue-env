@@ -1,11 +1,10 @@
 <template>
 	<div>
 		<el-tabs
-			:value="app.activeDiagramId"
+			v-model="app.activeDiagramId"
 			type="card"
 			closable
 			@edit="handleTabsEdit"
-			@click="handleClickTab"
 		>
 			<el-tab-pane v-for=" diagram in app.diagrams" :key="diagram.id" :label="diagram.name" :name="diagram.id">
 				<m-content :diagram="diagram" />
@@ -25,38 +24,55 @@ export default {
 	},
 	data() {
 		return {
-			app: app
+			app: app,
+			events: {
+				"diagram-open": this.handleDiagramOpen,
+				"diagram-remove": this.handleDiagramRemove
+			}
+
 		};
 	},
 	computed: {
 		stepManager(){
 			return app.activeProject.stepManager;
+		},
+		modelPool(){
+			return app.activeProject.modelPool;
+		},
+		diagrams(){
+			return app.diagrams;
 		}
 
 	},
 	watch: {
  
 	},
+	mounted(){
+		this.$bus.onBatch(this.events);
+	},
+	beforeDestroy(){
+		this.$bus.offBatch(this.events);
+
+	},
 	methods: {
+		handleDiagramOpen(id){
+			const diagram = this.modelPool.get(id);
+			if (!diagram) return;
+			if (!this.diagrams.includes(diagram)) this.diagrams.push(diagram);
+			app.activeDiagramId = id;
+
+		},
+		handleDiagramRemove(id){
+			const diagramIndex = this.diagrams.findIndex(i => i.id === id);
+			if (diagramIndex === -1) return;
+			this.diagrams.splice(diagramIndex, 1);
+			app.activeDiagramId = this.diagrams[0] && this.diagrams[0].id;
+
+		},
 		handleTabsEdit(tabKey, action){
 			console.log(tabKey, action);
 			if (action === "remove") {
-				try {
-					this.stepManager.beginUpdate();
-					const change = new ObjectChange({ obj: app, key: "activeDiagramId", val: (app.diagrams[0] || {}).id });
-					change.redo();
-					this.stepManager.addChange(change);
-					const change2 = new ArrayRemoveChange({ arr: app.diagrams, val: app.diagrams.find(i => i.id === tabKey) });
-					change2.redo();
-					this.stepManager.addChange(change2);
-					this.stepManager.endUpdate();
-					
-				} catch (error) {
-					this.stepManager.rollBack();
-					throw error;
-					
-				}
-
+				this.handleDiagramRemove(tabKey);
 			}
 
 		},

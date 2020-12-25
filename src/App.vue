@@ -14,8 +14,9 @@ import Header from "@/components/header/header";
 import ModelTree from "@/components/modelTree/modelTree";
 import graphTab from "@/components/graphEditor/graphTab";
 import Portal from "./components/common/Portal.vue";
-import { storage, VueMap } from "@/util/common";
+import { storage, VueMap, getUid } from "@/util/common";
 import { Factory } from "./model/graphNode";
+import { cloneDeep } from "lodash";
 
 export default {
 	name: "app",
