@@ -76,7 +76,7 @@ export default {
 		},
 		handleClickOutSide() {
 			setTimeout(() => {
-				this.clearDragData();
+				// this.clearDragData();
 			}, 100);
 		},
 		handleMouseMove(event) {

@@ -237,7 +237,7 @@ export const resizeUtil = {
 		});
 		// 子元素超出父元素时宽展父元素
 		if (y > shape.box.boxHeight){
-			childShape.updateBoxBounds({ boxHeight: y });
+			shape.updateBoxBounds({ boxHeight: y });
 			// shape.box.boxHeight = y; 
 		}
 		portShapes.forEach(childShape => {

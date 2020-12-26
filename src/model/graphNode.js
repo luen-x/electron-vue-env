@@ -308,6 +308,9 @@ class Pool {
 		change.redo();
 		this.stepManager.addChange(change);
 	}
+	getSize(){
+		return Object.keys(this.map).length;
+	}
 }
 // 工厂，负责对元模型，模型，图形的管理，包括初始化，创建，插入，更新，移动，删除
 // op是存储的3种option集合
@@ -352,6 +355,9 @@ export class Factory {
 		Object.values(this.shapePool.map || {}).forEach(shape => {
 			shape.updateChildren(this.shapePool.map);
 		});
+	}
+	getSize(){
+		return this.modelPool.getSize() + this.shapePool.getSize();
 	}
 	createModelDefine() {}
 

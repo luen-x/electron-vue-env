@@ -7,11 +7,34 @@ export const storeKey = storeKey_;
 /**
  * 获取唯一的id，以时间为基准，
  */
+// export const getUid = (() => {
+// 	const now = Date.now();
+// 	let index = 1;
+// 	return () => `${now}-${index++}`;
+// })();
+
 export const getUid = (() => {
-	const now = Date.now();
+	const chars = [];
+	for (let i = 33; i < 127; i++){
+		chars.push(String.fromCharCode(i));
+	}
 	let index = 1;
-	return () => `${now}-${index++}`;
-})();
+	function string10to64(number) {
+		
+		let radix = chars.length;
+		let	qutient = +number;
+		let	arr = [];
+		do {
+			mod = qutient % radix;
+			qutient = (qutient - mod) / radix;
+			arr.unshift(chars[mod]);
+		} while (qutient);
+		return arr.join("");
+	}
+	const now = string10to64(Date.now() - 1609006458579);
+
+	return () => `${now} ${index++}`;
+});
 
 /**
  * 根据点号分割的字符串或字符串数组从一个对象中取值

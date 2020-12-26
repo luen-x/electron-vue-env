@@ -139,13 +139,17 @@ export default {
 							targetPoint: undefined,
 							bounds: {}
 						});
+						// 初始化shape
 						resizeUtil.initShape(diagramShape);
+
+						// 给模型绑定diagramShapeId
 						const objChange = new ObjectChange({ obj: model, key: "diagramShapeId", val: diagramShape.id });
 						objChange.redo();
 						this.stepManager.addChange(objChange);
+
+						// 发送事件打开画布,一种特殊的Change，只在本地生效，只负责发射事件
 						const change2 = new OpenDiagramChange({ diagramId: model.id });
 						change2.redo();
-						
 						this.stepManager.addChange(change2);
 					}
 				} else {
@@ -212,24 +216,25 @@ export default {
 			}
 		},
 		handleOpenDiagram(data){
-			try {
-				this.factory.stepManager.beginUpdate();
-				const modelDefine = data.getModelDefine();
-				if (!modelDefine.isDiagram) return;
-				const change = new ArrayInsertChange({ arr: app.diagrams, val: data, onlyLocal: true });
-				change.redo();
-				change.userId = app.userId;
-				this.stepManager.addChange(change);
-				const change2 = new ObjectChange({ obj: app, key: "activeDiagramId", val: data.id, onlyLocal: true });
-				change2.userId = app.userId;
-				change2.redo();
-				this.stepManager.addChange(change2);
+			this.$bus.emit("diagram-open", data.id);
+			// try {
+			// 	this.factory.stepManager.beginUpdate();
+			// 	const modelDefine = data.getModelDefine();
+			// 	if (!modelDefine.isDiagram) return;
+			// 	const change = new ArrayInsertChange({ arr: app.diagrams, val: data, onlyLocal: true });
+			// 	change.redo();
+			// 	change.userId = app.userId;
+			// 	this.stepManager.addChange(change);
+			// 	const change2 = new ObjectChange({ obj: app, key: "activeDiagramId", val: data.id, onlyLocal: true });
+			// 	change2.userId = app.userId;
+			// 	change2.redo();
+			// 	this.stepManager.addChange(change2);
 
-				this.factory.stepManager.endUpdate();
-			} catch (error) {
-				this.factory.stepManager.rollBack();
-				throw error;
-			}
+			// 	this.factory.stepManager.endUpdate();
+			// } catch (error) {
+			// 	this.factory.stepManager.rollBack();
+			// 	throw error;
+			// }
 
 		}
 	}
