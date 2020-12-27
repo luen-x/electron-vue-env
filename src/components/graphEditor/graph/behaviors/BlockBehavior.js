@@ -1,7 +1,7 @@
 import { Behavior } from "./Behavior";
-export class PackageBehavior extends Behavior {
-	constructor(op){ 
-		super({ ...op, shapeDefineId: 2 });
+export class BlockBehavior extends Behavior {
+	constructor(){ 
+		super({ shapeDefineId: 2 });
 		// this.shapeDefineId = 2; // shapeDefineId表达了这个图形的定义，每个mainShape都应该对应一个Behavior
 		//
 

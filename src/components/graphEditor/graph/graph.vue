@@ -22,6 +22,7 @@ import freshUtil from "./freshUtil";
 import { resizeUtil } from "./resizeUtil";
 import { getUid } from "@/util/common";
 import { cloneDeep, debounce } from "lodash";
+import { behaviors } from "./behaviors/index";
 
 export default {
 	name: "comp-",

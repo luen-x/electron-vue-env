@@ -33,4 +33,11 @@ export class Behavior {
 		if (!this.shapeHover(sourceShape, shape)) return;
 
 	}
+	/**
+	 * 图形移动后触发的回调，某些图形平移（不是drop）后可能触发一些联动变化，比如时序图的message
+	 * @param {*} shape 
+	 */
+	moved(shape){
+
+	}
 }
