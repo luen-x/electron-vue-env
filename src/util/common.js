@@ -11,7 +11,7 @@ export const storeKey = storeKey_;
 // 	const now = Date.now();
 // 	let index = 1;
 // 	return () => `${now}-${index++}`;
-// })();
+// })(); // 162888
 
 export const getUid = (() => {
 	const chars = [];
@@ -25,7 +25,7 @@ export const getUid = (() => {
 		let	qutient = +number;
 		let	arr = [];
 		do {
-			mod = qutient % radix;
+			const mod = qutient % radix;
 			qutient = (qutient - mod) / radix;
 			arr.unshift(chars[mod]);
 		} while (qutient);
@@ -34,7 +34,7 @@ export const getUid = (() => {
 	const now = string10to64(Date.now() - 1609006458579);
 
 	return () => `${now} ${index++}`;
-});
+})(); // 139518 48
 
 /**
  * 根据点号分割的字符串或字符串数组从一个对象中取值

@@ -115,7 +115,7 @@ class Model {
 
 		// model[attrKey] = value;
 
-		const change = new UpdateAttrChange({ model: this, attrKey, value });
+		const change = new UpdateAttrChange({ model: this, attrKey, value, freshGraph: true });
 		change.redo();
 		this.stepManager.addChange(change);
 	}
@@ -432,14 +432,14 @@ export class Factory {
 			parentModel &&
 				this.createRelation({
 					id: getUid(),
-					parentId: null,
+					parentId: undefined,
 					modelDefineId: ContainModelDefine.id,
 					name: "包含",
 					displayName: "包含",
 					attrs: cloneDeep(ContainModelDefine.attrs),
 					sourceId: parentModel.id,
 					targetId: model.id,
-					diagramShapeId: null,
+					diagramShapeId: undefined,
 					children: [],
 					shapeIds: []
 				});

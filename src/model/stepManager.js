@@ -195,17 +195,25 @@ export class UpdateAttrChange extends Change {
 		this.attrKey = attrKey;
 		this.newValue = value;
 		this.oldValue = this.attr.value;
+		this.freshGraph = op.freshGraph;
 	}
 	redo() {
 		this.attr.value = this.newValue;
 		if (this.attrKey === "name") {
 			this.model.name = this.newValue;
 		}
+		if (this.freshGraph){
+			app.$bus.emit("fresh-graph");
+		}
+
 	}
 	undo() {
 		this.attr.value = this.oldValue;
 		if (this.attrKey === "name") {
 			this.model.name = this.oldValue;
+		}
+		if (this.freshGraph){
+			app.$bus.emit("fresh-graph");
 		}
 	}
 }

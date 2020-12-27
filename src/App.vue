@@ -34,7 +34,7 @@ export default {
 			factory = Factory.getInitFactory("project-1");
 			factory.createModel({
 				id: getUid(),
-				parentId: null,
+				parentId: undefined,
 				name: "Root",
 				displayName: "Root",
 				modelDefineId: 1,

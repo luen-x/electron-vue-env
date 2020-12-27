@@ -19,7 +19,8 @@
 		"allowedNestModelDefineIds": [2, 3],
 		"icon": "/img/icon.png",
 		"isRelation": false,
-		"isDiagram": false
+		"isDiagram": false,
+		"shapeDefineId":2
 	},
 	{
 		"id": 3,
