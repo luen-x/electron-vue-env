@@ -23,6 +23,7 @@ import { resizeUtil } from "./resizeUtil";
 import { getUid } from "@/util/common";
 import { cloneDeep, debounce } from "lodash";
 import { behaviors } from "./behaviors/index";
+import { shapeApi } from "@/api/shapeApi";
 
 export default {
 	name: "comp-",
@@ -190,6 +191,7 @@ export default {
 
 				});
 				resizeUtil.initShape(shape, relativePoint.x, relativePoint.y);
+				resizeUtil.expandParentSize(shape);
 				// createShape 
 
 				this.stepManager.endUpdate();
@@ -222,27 +224,29 @@ export default {
 		},
 
 		handleCellsMoved(graph, event) {
+			if (graph.inFresh) return;
 			const { cells, dx, dy } = event.properties;
 			console.log("handleCellsMoved", event);
 			cells.forEach(cell => {
 				this.updateGeo(cell, { dx, dy, isMove: true });
 
 			});
-			this.$bus.emit("fresh-graph");
+			// this.$bus.emit("fresh-graph");
 
-			this.$nextTick(() => {
-				const sortedParentIds = [];
-				cells.forEach(cell => {
-					if (cell.parent == null || sortedParentIds.includes(cell.parent.id)) return; // 拖动后触发删除会引起parent没有
-					const orderedCells = shapeApi.sortBySize(cell.parent.children);
-					this.graph.orderCells(false, orderedCells);
-					sortedParentIds.push(cell.parent.id);
+			// this.$nextTick(() => {
+			// 	const sortedParentIds = [];
+			// 	cells.forEach(cell => {
+			// 		if (cell.parent == null || sortedParentIds.includes(cell.parent.id)) return; // 拖动后触发删除会引起parent没有
+			// 		const orderedCells = shapeApi.sortBySize(cell.parent.children);
+			// 		this.graph.orderCells(false, orderedCells);
+			// 		sortedParentIds.push(cell.parent.id);
 
-				});
+			// 	});
 
-			});
+			// });
 		},
 		handleCellsResized(graph, event) {
+			if (graph.inFresh) return;
 			const { cells } = event.properties;
 			console.log("handleCellsResized", event);
 			this.updateGeo(cells[0], { isResize: true });

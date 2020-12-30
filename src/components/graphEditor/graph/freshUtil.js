@@ -10,58 +10,65 @@ export default {
 	 */
 	freshGraph(graph, option = { all: true }) {
 		if (!graph.visible) return;
-		console.time("fresh-time");
-		const {
-			all,
-			diagramId,
-			diagramIds,
-			modelId,
-			modelIds,
-			shapeId,
-			shapeIds
-		} = option;
-		const diagram = graph.diagram;
+		try {
+	
+			graph.inFresh = true;
+			console.time("fresh-time");
+			const {
+				all,
+				diagramId,
+				diagramIds,
+				modelId,
+				modelIds,
+				shapeId,
+				shapeIds
+			} = option;
+			const diagram = graph.diagram;
 
-		if (all) {
-			this.updateDiagramName(graph);
-			const diagramShape = diagram.factory.shapePool.get(diagram.diagramShapeId);
+			if (all) {
+				this.updateDiagramName(graph);
+				const diagramShape = diagram.factory.shapePool.get(diagram.diagramShapeId);
 
-			const flatShapes = this.getFlatShapes(diagramShape);
-			const cells = graph.model.cells;
-			const modelCells = Object.keys(cells).map(key => cells[key]);
-			// 如果没有对应的cell则创建cell
-			flatShapes.forEach(shape => {
-				if (!cells[shape.id]) {
-					graphUtil.addCellByShape(graph, shape, {}, shape.deep);
-				}
-			});
-			// 如果cell没有对应的shape则移除cell,
-			const removeCells = modelCells.filter(
-				cell =>
-					!flatShapes.find(shape => shape.id === cell.id) &&
+				const flatShapes = this.getFlatShapes(diagramShape);
+				const cells = graph.model.cells;
+				const modelCells = Object.keys(cells).map(key => cells[key]);
+				// 如果没有对应的cell则创建cell
+				flatShapes.forEach(shape => {
+					if (!cells[shape.id]) {
+						graphUtil.addCellByShape(graph, shape, {}, shape.deep);
+					}
+				});
+				// 如果cell没有对应的shape则移除cell,
+				const removeCells = modelCells.filter(
+					cell =>
+						!flatShapes.find(shape => shape.id === cell.id) &&
 					cell.id !== "0" &&
 					cell.id !== "1"
-			);
-			graphUtil.deleteCellByIds(
-				graph,
-				removeCells.map(c => c.id)
-			);
+				);
+				graphUtil.deleteCellByIds(
+					graph,
+					removeCells.map(c => c.id)
+				);
 
-			// 递归差异对比，更新所有cell
-			graphUtil.updateCellsByShapes(graph, [diagramShape], true);
+				// 递归差异对比，更新所有cell
+				graphUtil.updateCellsByShapes(graph, [diagramShape], true);
 			// const edges = modelCells.filter(cell => cell.edge);
 			// this.freshEdgeLabelPosition(graph, edges,);
-		} else if (modelId) {
-			this.freshGraphByModelId(graph, modelId);
-		} else if (shapeId) {
-			this.freshGraphByShapeId(graph, shapeId);
-		} else if (shapeIds) {
-			const uniqShapeIds = uniqueArr(shapeIds);
-			uniqShapeIds.forEach(id => {
-				this.freshGraphByShapeId(graph, id);
-			});
+			} else if (modelId) {
+				this.freshGraphByModelId(graph, modelId);
+			} else if (shapeId) {
+				this.freshGraphByShapeId(graph, shapeId);
+			} else if (shapeIds) {
+				const uniqShapeIds = uniqueArr(shapeIds);
+				uniqShapeIds.forEach(id => {
+					this.freshGraphByShapeId(graph, id);
+				});
+			}
+			console.timeEnd("fresh-time");
+			graph.inFresh = false;
+		} finally {
+			graph.inFresh = false;
 		}
-		console.timeEnd("fresh-time");
 	},
 	freshGraphByModelId(graph, id) {
 		this.handleModelUpdate(graph, id);

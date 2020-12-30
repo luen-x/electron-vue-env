@@ -76,6 +76,10 @@ export class Graph extends mxGraph {
 		};
 		this.curEdgeStyleObj = { ...this.defaultEdgStyleObj };
 		this.curEdgeStyle = this.createCurrentEdgeStyle();
+		this.resetEdgesOnConnect = false;
+		this.extendParentsOnAdd = false; // 新增cell时是否自动扩展父元素大小,改为不扩展，扩展时会导致打开画布时重复更新size
+		this.extendParents = false; // 子元素resize时自动扩展父元素，改为false,因为port就是可以在一半在父元素外面
+		this.connectableEdges = true;// 线要可以连接
 	}
 	createCurrentEdgeStyle() {
 		return util.obj2Style(this.curEdgeStyleObj);
