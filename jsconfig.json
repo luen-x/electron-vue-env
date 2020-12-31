@@ -7,7 +7,8 @@
           "@/*": ["src/*"],
           "@common/*": ["src/components/common/*"],
           
-     }
+     },
+     "experimentalDecorators": true
   },
   "exclude": ["node_modules", "dist"]
 }

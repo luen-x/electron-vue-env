@@ -48,6 +48,44 @@ class ModelDefine {
   
   }
  */
+export function transaction(target, name, descriptor){
+	const old = descriptor.value;
+	descriptor.value = function() { // 注意这里需要保留原this作用域，不能使用箭头函数
+		const stepManager = this.stepManager || app.activeProject.stepManager;
+		try {
+			stepManager.beginUpdate();
+			const ret = old.apply(this, arguments);
+			stepManager.endUpdate();
+			return ret;
+		} catch (error) {
+			stepManager.rollBack();
+			throw error;
+			
+		}
+			
+	};
+
+	// desc.value = function()
+	// console.log(";aaaa", target, name, desc);
+}
+export function transaction2(fun){
+	
+	return function() {
+		const stepManager = app.activeProject.stepManager;
+		try {
+			stepManager.beginUpdate();
+			const ret = fun.apply(this, arguments);
+			stepManager.endUpdate();
+			return ret;
+		} catch (error) {
+			stepManager.rollBack();
+			throw error;
+			
+		}
+		
+	};
+
+}
 class Model {
 	constructor(op, factory) {
 		this.factory = factory;
@@ -363,73 +401,68 @@ export class Factory {
 
 	updateModelDefine() {}
 	removeModelDefine() {}
+	@transaction
 	createRelation(op) {
-		try {
-			this.stepManager.beginUpdate();
-			const { modelDefineId } = op;
-			const modelDefine = this.modelDefinePool.get(modelDefineId);
-			op.attrs = cloneDeep(modelDefine.attrs);
-			const model = new Relation(op, this);
-			this.relationPool.add(model);
+		const { modelDefineId } = op;
+		const modelDefine = this.modelDefinePool.get(modelDefineId);
+		op.attrs = cloneDeep(modelDefine.attrs);
+		const model = new Relation(op, this);
+		this.relationPool.add(model);
 
-			if (modelDefine.typeName === "Contain") {
-				this.stepManager.endUpdate();
-				return;
-			}
+		if (modelDefine.typeName === "Contain") {
+			this.stepManager.endUpdate();
+			return;
+		}
 
-			const sourceModel = this.modelPool.get(model.sourceId);
-			const firstChildModelDefine =
+		const sourceModel = this.modelPool.get(model.sourceId);
+		const firstChildModelDefine =
 				sourceModel.children[0] &&
 				this.modelDefinePool.get(sourceModel.children[0].modelDefineId);
-			if (firstChildModelDefine && firstChildModelDefine.isRelationGroup) {
-				model.parentId = sourceModel.children[0].id;
-				sourceModel.children[0].addChild(model);
-			} else {
-				const relationGroupModelDefine = this.modelDefinePool.get(5);
-				const relationGroup = new RelationGroup(
-					{
-						id: getUid(),
-						parentId: sourceModel.id,
-						modelDefineId: 5,
-						attrs: cloneDeep(relationGroupModelDefine.attrs),
-						name: "关系"
-					},
-					this
-				);
-				this.modelPool.add(relationGroup);
+		if (firstChildModelDefine && firstChildModelDefine.isRelationGroup) {
+			model.parentId = sourceModel.children[0].id;
+			sourceModel.children[0].addChild(model);
+		} else {
+			const relationGroupModelDefine = this.modelDefinePool.get(5);
+			const relationGroup = new RelationGroup(
+				{
+					id: getUid(),
+					parentId: sourceModel.id,
+					modelDefineId: 5,
+					attrs: cloneDeep(relationGroupModelDefine.attrs),
+					name: "关系"
+				},
+				this
+			);
+			this.modelPool.add(relationGroup);
 
-				model.parentId = relationGroup.id;
-				sourceModel.addChild(relationGroup, 0);
-				relationGroup.addChild(model);
-			}
-			this.stepManager.endUpdate();
-			return model;
-		} catch (error) {
-			this.stepManager.rollBack();
-			throw error;
+			model.parentId = relationGroup.id;
+			sourceModel.addChild(relationGroup, 0);
+			relationGroup.addChild(model);
 		}
+		return model;
+
 	}
+	@transaction
 	createModel(op) {
-		try {
-			console.log("create model");
-			this.stepManager.beginUpdate();
-			const { modelDefineId } = op;
-			const modelDefine = this.modelDefinePool.get(modelDefineId);
-			if (modelDefine.isRelation) {
-				this.stepManager.endUpdate();
-				return this.createRelation(op);
-			}
-			op.attrs = cloneDeep(modelDefine.attrs);
+		console.log("create model");
 
-			const model = new Model(op, this);
-			const parentModel = this.modelPool.get(model.parentId);
-			this.modelPool.add(model);
+		const { modelDefineId } = op;
+		const modelDefine = this.modelDefinePool.get(modelDefineId);
+		if (modelDefine.isRelation) {
+			this.stepManager.endUpdate();
+			return this.createRelation(op);
+		}
+		op.attrs = cloneDeep(modelDefine.attrs);
 
-			if (parentModel) {
-				parentModel.addChild(model);
-			}
-			const ContainModelDefine = this.modelDefinePool.get(4);
-			parentModel &&
+		const model = new Model(op, this);
+		const parentModel = this.modelPool.get(model.parentId);
+		this.modelPool.add(model);
+
+		if (parentModel) {
+			parentModel.addChild(model);
+		}
+		const ContainModelDefine = this.modelDefinePool.get(4);
+		parentModel &&
 				this.createRelation({
 					id: getUid(),
 					parentId: undefined,
@@ -443,12 +476,8 @@ export class Factory {
 					children: [],
 					shapeIds: []
 				});
-			this.stepManager.endUpdate();
-			return model;
-		} catch (error) {
-			this.stepManager.rollBack();
-			throw error;
-		}
+		return model;
+	
 	}
 
 	updateModelAttr({ attrKey, value, model }) {

@@ -30,7 +30,7 @@
 <script>
 import { getUid, storage } from "../../util/common";
 import modelDefine from "@/model/modelDefine.json";
-import { Factory } from "../../model/graphNode";
+import { Factory, transaction, transaction2 } from "../../model/graphNode";
 import { cloneDeep } from "lodash";
 import { ContextMenu } from "@/components/common/ContextMenu/index";
 import graphUtil from "../graphEditor/graph/graphUtil";
@@ -106,75 +106,68 @@ export default {
 				}));
 			return items;
 		},
+		@transaction
 		addNode(parentNode, menuItem) {
-			try {
-				this.factory.stepManager.beginUpdate();
-			
-				if (!menuItem.modelDefine.isRelation) {
-					const model = this.factory.createModel({
+	
+			if (!menuItem.modelDefine.isRelation) {
+				const model = this.factory.createModel({
+					id: getUid(),
+					modelDefineId: menuItem.value,
+					parentId: parentNode.id,
+					name: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
+					displayName: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
+					attrs: cloneDeep(menuItem.modelDefine.attrs)
+				});
+				if (menuItem.modelDefine.isDiagram){
+					const shapeDefine = this.factory.shapeDefinePool.get(menuItem.modelDefine.shapeDefineId);
+					const box = shapeDefine.box;
+					const initBox = { ...box };
+					const diagramShape = this.factory.createShape({
 						id: getUid(),
-						modelDefineId: menuItem.value,
-						parentId: parentNode.id,
-						name: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
-						displayName: menuItem.modelDefine.typeName + (parentNode.children.length + 1),
-						attrs: cloneDeep(menuItem.modelDefine.attrs)
+						parentId: undefined,
+						modelId: model.id,
+						shapeDefineId: shapeDefine.id,
+						box: initBox,
+						sourceId: undefined,
+						targetId: undefined,
+						childIds: [],
+						children: [],
+						offset: undefined,
+						waypoints: [],
+						sourcePoint: undefined,
+						targetPoint: undefined,
+						bounds: {}
 					});
-					if (menuItem.modelDefine.isDiagram){
-						const shapeDefine = this.factory.shapeDefinePool.get(menuItem.modelDefine.shapeDefineId);
-						const box = shapeDefine.box;
-						const initBox = { ...box };
-						const diagramShape = this.factory.createShape({
-							id: getUid(),
-							parentId: undefined,
-							modelId: model.id,
-							shapeDefineId: shapeDefine.id,
-							box: initBox,
-							sourceId: undefined,
-							targetId: undefined,
-							childIds: [],
-							children: [],
-							offset: undefined,
-							waypoints: [],
-							sourcePoint: undefined,
-							targetPoint: undefined,
-							bounds: {}
-						});
 						// 初始化shape
-						resizeUtil.initShape(diagramShape);
+					resizeUtil.initShape(diagramShape);
 
-						// 给模型绑定diagramShapeId
-						const objChange = new ObjectChange({ obj: model, key: "diagramShapeId", val: diagramShape.id });
-						objChange.redo();
-						this.stepManager.addChange(objChange);
+					// 给模型绑定diagramShapeId
+					const objChange = new ObjectChange({ obj: model, key: "diagramShapeId", val: diagramShape.id });
+					objChange.redo();
+					this.stepManager.addChange(objChange);
 
-						// 发送事件打开画布,一种特殊的Change，只在本地生效，只负责发射事件
-						const change2 = new OpenDiagramChange({ diagramId: model.id });
-						change2.redo();
-						this.stepManager.addChange(change2);
-					}
-				} else {
-					this.factory.createRelation({
-						id: getUid(),
-						modelDefineId: menuItem.value,
-						parentId: null,
-						name: menuItem.modelDefine.typeName,
-						displayName:
+					// 发送事件打开画布,一种特殊的Change，只在本地生效，只负责发射事件
+					const change2 = new OpenDiagramChange({ diagramId: model.id });
+					change2.redo();
+					this.stepManager.addChange(change2);
+				}
+			} else {
+				this.factory.createRelation({
+					id: getUid(),
+					modelDefineId: menuItem.value,
+					parentId: null,
+					name: menuItem.modelDefine.typeName,
+					displayName:
 						menuItem.modelDefine.typeName +
 						parentNode.name +
 						"->" +
 						"zqq",
-						attrs: cloneDeep(menuItem.modelDefine.attrs),
-						sourceId: parentNode.id,
-						targetId: null
-					});
-				}
-				this.factory.stepManager.endUpdate();
-				
-			} catch (error) {
-				this.factory.stepManager.rollBack();
-				throw error;
-				
+					attrs: cloneDeep(menuItem.modelDefine.attrs),
+					sourceId: parentNode.id,
+					targetId: null
+				});
 			}
+
 		},
 		handleDelete(data) {
 			this.factory.removeModel(data.id);
@@ -194,26 +187,21 @@ export default {
 			}
 			data.inEditName = false;
 		},
-		handleRedo() {
+		handleRedo(){
 			this.factory.stepManager.redo();
 		},
 		handleUndo() {
 			this.factory.stepManager.undo();
 		},
+		@transaction
 		handleTestRollBack() {
-			try {
-				this.factory.stepManager.beginUpdate();
-				console.log(this.treeData[0].children.length);
-				[...this.treeData[0].children].forEach((model, index) => {
-					if (index === 3) throw new Error("2 error");
-					// console.log(index);
-					this.factory.removeModel(model.id);
-				});
-				this.factory.stepManager.endUpdate();
-			} catch (error) {
-				this.factory.stepManager.rollBack();
-				throw error;
-			}
+			console.log(this.treeData[0].children.length);
+			[...this.treeData[0].children].forEach((model, index) => {
+				if (index === 1) throw new Error("2 error");
+				// console.log(index);
+				this.factory.removeModel(model.id);
+			});
+			
 		},
 		handleOpenDiagram(data){
 			this.$bus.emit("diagram-open", data.id);

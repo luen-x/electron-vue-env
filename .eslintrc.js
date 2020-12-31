@@ -28,7 +28,11 @@ module.exports = {
 	},
 	extends: ["plugin:vue/recommended", "eslint:recommended"],
 	parserOptions: {
-		parser: "babel-eslint"
+		parser: "babel-eslint",
+		ecmaFeatures:{
+			// 支持装饰器
+			legacyDecorators: true
+		  }
 	},
 	rules: {
 		// vue https://github.com/vuejs/eslint-plugin-vue
