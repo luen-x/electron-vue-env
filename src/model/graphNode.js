@@ -410,7 +410,6 @@ export class Factory {
 		this.relationPool.add(model);
 
 		if (modelDefine.typeName === "Contain") {
-			this.stepManager.endUpdate();
 			return;
 		}
 
@@ -449,7 +448,6 @@ export class Factory {
 		const { modelDefineId } = op;
 		const modelDefine = this.modelDefinePool.get(modelDefineId);
 		if (modelDefine.isRelation) {
-			this.stepManager.endUpdate();
 			return this.createRelation(op);
 		}
 		op.attrs = cloneDeep(modelDefine.attrs);

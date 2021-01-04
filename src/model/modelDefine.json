@@ -5,7 +5,7 @@
 		"parentModelDefineId": null,
 		"attrs": [{ "value": "Model", "key": "name" }],
 		"allowedNestModelDefineIds": [2, 3],
-		"icon": "/img/icon.png",
+		"icon": "/statics/images/sysml/Model.svg",
 		"isRelation": false,
 		"isDiagram": false
 
@@ -17,7 +17,7 @@
 		"attrs": [{ "value": "Package", "key": "name" }],
 		"parentModelDefineId": null,
 		"allowedNestModelDefineIds": [2, 3],
-		"icon": "/img/icon.png",
+		"icon": "/statics/images/sysml/Package.svg",
 		"isRelation": false,
 		"isDiagram": false,
 		"shapeDefineId":2
@@ -29,7 +29,7 @@
 
 		"parentModelDefineId": null,
 		"allowedNestModelDefineIds": [2, 3, 6, 7],
-		"icon": "/img/icon.png",
+		"icon": "/statics/images/sysml/Block.svg",
 		"isRelation": false,
 		"isDiagram": false,
 		"shapeDefineId":1
@@ -51,7 +51,7 @@
 		"attrs": [{ "value": "关系", "key": "name" }],
 		"parentModelDefineId": null,
 		"allowedNestModelDefineIds": [],
-		"icon": "/img/icon.png",
+		"icon": "/statics/images/sysml/RelationGroup.svg",
 		"isRelation": false,
 		"isDiagram": false,
 		"isRelationGroup": true
@@ -68,11 +68,11 @@
 	},
 	{
 		"id": 7,
-		"typeName": "BlockDefinationDiagram",
-		"attrs": [{ "value": "BlockDefinationDiagram", "key": "name" }],
+		"typeName": "SysMLBlockDefinitionDiagram",
+		"attrs": [{ "value": "SysMLBlockDefinitionDiagram", "key": "name" }],
 		"parentModelDefineId": null,
 		"allowedNestModelDefineIds": [],
-		"icon": "/img/icon.png",
+		"icon": "/statics/images/sysml/SysMLBlockDefinitionDiagram.svg",
 		"isRelation": false,
 		"isDiagram": true,
 		"shapeDefineId":3

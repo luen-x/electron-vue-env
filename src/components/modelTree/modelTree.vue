@@ -13,8 +13,8 @@
 				class="tree-line"
 				@node-contextmenu="handleContextMenu"
 			>
-				<span slot-scope="{data}" style="border:1px solid black" class="g-relative" @dblclick="handleOpenDiagram(data)">
-					<span class="_ver-line" />
+				<span slot-scope="{data}" class="g-relative g-lh-18" @dblclick="handleOpenDiagram(data)">
+					<img :src="data.getModelDefine().icon" class="g-m-l-4" style="position:relative;top:-2px">
 					<span v-if="!data.inEditName">
 						{{ data.name }}
 						<i class="el-icon-circle-close g-operation" @click.stop="handleDelete(data)" />
@@ -23,11 +23,13 @@
 					</span>
 					<el-input
 						v-else
+						ref="input"
 						v-model="data.nameForEdit"
 						size="mini"
+						class="_tree-input"
 						autofocus
 						@blur="handleSaveName(data)"
-						@click.stop
+						@click.native.stop
 					/>
 
 				</span>
@@ -184,6 +186,9 @@ export default {
 			this.$set(data, "nameForEdit", data.name);
 			// data.nameForEdit = data.name;
 			data.inEditName = true;
+			this.$nextTick(() => {
+				this.$refs.input.focus();
+			});
 		},
 		handleSaveName(data) {
 			if (data.nameForEdit !== data.name) {
@@ -240,10 +245,27 @@ export default {
 .v-model-tree {
 	width: 300px;
 	margin-right: 20px;
+	._tree-input {
+		.el-input__inner {
+			height: 18px;
+			line-height: 18px;
+			padding-left: 8px;
+
+		}
+		margin-left: 4px;
+		width: 100px;
+
+	}
 	.tree-line{
   .el-tree-node {
     position: relative;
     padding-left: 16px; // 缩进量
+  }
+  .el-tree-node__expand-icon.is-leaf {
+	  display: none;
+  }
+  .el-tree-node__expand-icon {
+	  margin-right: 3px;
   }
   .el-tree-node__children {
     padding-left: 16px; // 缩进量
@@ -268,7 +290,7 @@ export default {
   // 横线
   .el-tree-node::after {
     content: "";
-    width: 24px;
+    width: 16px;
     height: 20px;
     position: absolute;
     left: -3px;
