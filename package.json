@@ -20,7 +20,8 @@
 		"element-ui": "^2.13.0",
 		"lodash": "^4.17.20",
 		"moment": "^2.26.0",
-		"mxgraph": "^4.2.2"
+		"mxgraph": "^4.2.2",
+		"vue-router": "^3.4.9"
 	},
 	"devDependencies": {
 		"@vue/cli-plugin-babel": "~4.5.0",
