@@ -1,4 +1,6 @@
 import VueRouter from "vue-router";
+import Home from "@/view/home";
+import Editor from "@/view/editor";
 
 export const router = new VueRouter({
 	mode: "hash",
@@ -9,11 +11,11 @@ export const router = new VueRouter({
 		},
 		{
 			path: "/home",
-			component: { render: h => <div>home</div> }
+			component: Home
 		},
 		{
 			path: "/editor",
-			component: { render: h => <div>editor</div> }
+			component: Editor
 		},
 		{
 			path: "*",

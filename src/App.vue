@@ -1,10 +1,8 @@
 <template>
 	<div id="app">
 		<m-header />
-		<div class="g-flex">
-			<m-model-tree class="g-flex-0" />
-			<m-graph-tab class="g-flex-1" />
-		</div>
+		<router-view />
+
 		<m-portal />
 	</div>
 </template>
