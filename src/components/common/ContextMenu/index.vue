@@ -22,7 +22,7 @@ const com = {
 	components: {
 		"m-menu": Menu
 	},
-	directives: {
+	directives: { 
 		Clickoutside 
 	},
 	props: {

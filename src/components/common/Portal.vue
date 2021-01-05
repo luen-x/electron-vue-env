@@ -20,7 +20,7 @@ let vm;
 /**
  * 传送门
  * 
- */
+ */ 
 export class Portal{
 	constructor(comp, option = {}){
 		if (!comp) throw new Error("portal 的 Component 必传");

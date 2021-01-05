@@ -1,10 +1,9 @@
-export const aliveRegExp = { className: /(el-table__body-wrapper|el-table__row|el-popper|g-keep-portal|el-dialog__wrapper|el-drawer__container|c-contextmenu)/ };
-export const version = "1.0.0"; // 系统版本
-export const storeKey = { // localStorage，sessionStorage 存储key
-	user: "user", // 用户信息
-	token: "token", // access_token,refresh_token
-	auth: "auth", // 用户权限
-	copyResource: "copyResource", // 复制资源
-	projectVersion: "projectVersion" // 版本切换使用
+// 常量
+
+export const storeKey = { // 存储于localstorage的key
+	recentProjects: "recentProjects", // 最近打开的项目
+	project: "project" // 浏览器环境下，本地localstorage存储的项目，ke后拼接::projectId
 
 };
+
+export const VERSION = "1.0"; 

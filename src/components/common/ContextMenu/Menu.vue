@@ -24,7 +24,7 @@
 			</div>
 			<context-menu v-if="item.children && item.children.length" :menu="item.children" is-child @click-menu-item="handleClickMenuItem" />
 		</div>
-	</div>
+	</div> 
 </template>
 <script>
 export default {

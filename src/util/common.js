@@ -1,8 +1,8 @@
 import { StorageManager } from "./storage";
-import { version, storeKey as storeKey_ } from "@/constants/constants";
+import { VERSION, storeKey as storeKey_ } from "@/constants/constants";
 import moment from "moment";
 import Vue from "vue";
-export const storage = new StorageManager({ version, prefix: "m-require" });
+export const storage = new StorageManager({ version: VERSION, prefix: "m-require" });
 export const storeKey = storeKey_;
 /**
  * 获取唯一的id，以时间为基准，
@@ -16,6 +16,7 @@ export const storeKey = storeKey_;
 export const getUid = (() => {
 	const chars = [];
 	for (let i = 33; i < 127; i++){
+		if (i === 45) continue;
 		chars.push(String.fromCharCode(i));
 	}
 	let index = 1;
@@ -33,7 +34,7 @@ export const getUid = (() => {
 	}
 	const now = string10to64(Date.now() - 1609006458579);
 
-	return () => `${now} ${index++}`;
+	return () => `${now}-${index++}`;
 })(); // 139518 48
 
 /**
